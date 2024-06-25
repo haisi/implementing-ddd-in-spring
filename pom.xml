@@ -74,11 +74,6 @@
             <artifactId>jmolecules-starter-ddd</artifactId>
             <version>${jmolecules-integrations.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.jmolecules.integrations</groupId>
-            <artifactId>jmolecules-bytebuddy</artifactId>
-            <version>${jmolecules-integrations.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -130,26 +125,44 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
-            <plugin>
-                <groupId>net.bytebuddy</groupId>
-                <artifactId>byte-buddy-maven-plugin</artifactId>
-                <version>${bytebuddy.version}</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>transform</goal> <!-- Enable the source code transformation -->
-                        </goals>
-                    </execution>
-                </executions>
-                <dependencies>
-                    <dependency> <!-- Apply jMolecules transformations -->
-                        <groupId>org.jmolecules.integrations</groupId>
-                        <artifactId>jmolecules-bytebuddy</artifactId>
-                        <version>${jmolecules-integrations.version}</version>
-                    </dependency>
-                </dependencies>
-            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <!-- Does not play well with ArchUnit -->
+            <id>jmolecules-bytebuddy</id>
+            <dependencies>
+                <dependency>
+                    <groupId>org.jmolecules.integrations</groupId>
+                    <artifactId>jmolecules-bytebuddy</artifactId>
+                    <version>${jmolecules-integrations.version}</version>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>net.bytebuddy</groupId>
+                        <artifactId>byte-buddy-maven-plugin</artifactId>
+                        <version>${bytebuddy.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>transform</goal> <!-- Enable the source code transformation -->
+                                </goals>
+                            </execution>
+                        </executions>
+                        <dependencies>
+                            <dependency> <!-- Apply jMolecules transformations -->
+                                <groupId>org.jmolecules.integrations</groupId>
+                                <artifactId>jmolecules-bytebuddy</artifactId>
+                                <version>${jmolecules-integrations.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
