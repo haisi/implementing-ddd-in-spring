@@ -79,9 +79,25 @@
             <artifactId>jmolecules-onion-architecture</artifactId>
             <version>${jmolecules.version}</version>
         </dependency>
+
         <dependency>
             <groupId>org.jmolecules.integrations</groupId>
-            <artifactId>jmolecules-starter-ddd</artifactId>
+            <artifactId>jmolecules-apt</artifactId>
+            <version>${jmolecules-integrations.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jmolecules.integrations</groupId>
+            <artifactId>jmolecules-ddd-integration</artifactId>
+            <version>${jmolecules-integrations.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jmolecules.integrations</groupId>
+            <artifactId>jmolecules-spring</artifactId>
+            <version>${jmolecules-integrations.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jmolecules.integrations</groupId>
+            <artifactId>jmolecules-jpa</artifactId>
             <version>${jmolecules-integrations.version}</version>
         </dependency>
 
