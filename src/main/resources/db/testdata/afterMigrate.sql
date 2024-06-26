@@ -1,0 +1,3 @@
+-- insert into restaurant (id, name, status, address_city, address_postcode, address_street)
+-- values ('00000000-0000-0000-0000-000000000000', 'Aicha''s ', 'PENDING_REVIEW', 'Lenzburg', '5600', 'Bahnhofstrasse 38')
+-- on conflict do nothing;
