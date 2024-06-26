@@ -28,7 +28,7 @@ class TestTests {
             .should(haveTestFixture());
 
     /**
-     * See chapter "Collection-Oriented Repositories" in "Implementing Domain-Driven-Design" by Vaughn Vernon for further details.
+     * Read chapter "Collection-Oriented Repositories" in "Implementing Domain-Driven-Design" by Vaughn Vernon for further details.
      */
     @ArchTest
     private final ArchRule repositoriesHaveInMemoryImplementation = ArchRuleDefinition
