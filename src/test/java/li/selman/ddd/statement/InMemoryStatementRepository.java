@@ -4,13 +4,17 @@ import li.selman.ddd.common.DeepCopyAggregateForInMemoryRepository;
 import org.jmolecules.ddd.types.AggregateRoot;
 import org.jmolecules.ddd.types.Identifier;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-public class InMemoryStatementRepository implements StatementRepository, DeepCopyAggregateForInMemoryRepository {
+public class InMemoryStatementRepository
+        extends HashMap<Statement.StatementId, Statement>
+        implements StatementRepository, DeepCopyAggregateForInMemoryRepository {
     @Override
     public Optional<Statement> findById(Statement.StatementId id) {
-        return Optional.empty();
+        Statement statement = get(id);
+        return Optional.ofNullable(statement);
     }
 
     @Override
