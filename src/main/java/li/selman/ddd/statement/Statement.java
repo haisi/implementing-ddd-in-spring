@@ -93,12 +93,29 @@ public class Statement
                               @Enumerated(EnumType.STRING) Type type,
                               Integer sequenceOfDay) implements Identifier {
 
-        public static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyyMMdd");
+        private static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyyMMdd");
 
         public String toBusinessId() {
             String dateFormatted = date.format(DATE_PATTERN);
             String typeCode = type.code;
             return "%s-%s-%d".formatted(dateFormatted, typeCode, sequenceOfDay);
+        }
+
+        public static StatementId fromString(String string) {
+            String[] split = string.split("-");
+            if (split.length != 3) {
+                throw new IllegalArgumentException("Not a valid statement id: " + string);
+            }
+            LocalDate date = LocalDate.parse(split[0], DATE_PATTERN);
+            Type type = Type.fromCode(split[1]);
+            Integer sequenceOfDay = Integer.valueOf(split[2]);
+
+            return new StatementId(date, type, sequenceOfDay);
+        }
+
+        @Override
+        public String toString() {
+            return toBusinessId();
         }
     }
 
