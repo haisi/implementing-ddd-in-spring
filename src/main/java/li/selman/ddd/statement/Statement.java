@@ -142,5 +142,14 @@ public class Statement
         Type(String code) {
             this.code = code;
         }
+
+        public static Type fromCode(String code) {
+            for (Type type : Type.values()) {
+                if (type.code.equals(code)) {
+                    return type;
+                }
+            }
+            throw new IllegalArgumentException("Unknown statement type: " + code);
+        }
     }
 }
