@@ -276,6 +276,38 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <!--
+                maven-enforcer-plugin helps keep sanity in your pom.xml
+                -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>enforce-versions</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <rules>
+                        <banDuplicatePomDependencyVersions/>
+                        <banDynamicVersions/>
+                        <dependencyConvergence>
+                            <excludes>
+                                <!-- disabled for jMolecules -->
+                                <exclude>org.jmolecules*</exclude>
+                            </excludes>
+                        </dependencyConvergence>
+                        <requireJavaVersion>
+                            <version>${java.version}</version>
+                        </requireJavaVersion>
+                    </rules>
+                    <fail>true</fail>
+                </configuration>
+            </plugin>
             <!--            <plugin>-->
             <!--                <groupId>org.asciidoctor</groupId>-->
             <!--                <artifactId>asciidoctor-maven-plugin</artifactId>-->
@@ -342,5 +374,4 @@
             </build>
         </profile>
     </profiles>
-
 </project>
