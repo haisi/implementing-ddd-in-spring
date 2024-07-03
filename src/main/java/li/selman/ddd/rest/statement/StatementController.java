@@ -11,24 +11,28 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 class StatementController {
 
-    private final StatementRepository statementsRepo;
+  private final StatementRepository statementsRepo;
 
-    StatementController(StatementRepository statementRepository) {
-        this.statementsRepo = statementRepository;
-    }
+  StatementController(StatementRepository statementRepository) {
+    this.statementsRepo = statementRepository;
+  }
 
-    @GetMapping("/statement/{statementId}")
-    HttpEntity<?> react(@PathVariable Statement.StatementId statementId) {
-        Statement statement = statementsRepo.findById(statementId).orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404)));
-        return ResponseEntity.ok(statement);
-    }
+  @GetMapping("/statement/{statementId}")
+  HttpEntity<?> react(@PathVariable Statement.StatementId statementId) {
+    Statement statement =
+        statementsRepo
+            .findById(statementId)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404)));
+    return ResponseEntity.ok(statement);
+  }
 
-    @PostMapping("/{statementId}/react")
-    HttpEntity<?> react(@PathVariable Statement.StatementId statementId, @RequestParam String reaction) {
+  @PostMapping("/{statementId}/react")
+  HttpEntity<?> react(
+      @PathVariable Statement.StatementId statementId, @RequestParam String reaction) {
 
-//        statementsRepo.findById(statementId).orElseThrow(() -> new ResponseStatusException(HttpStatusCode.valueOf(404)));
+    //        statementsRepo.findById(statementId).orElseThrow(() -> new
+    // ResponseStatusException(HttpStatusCode.valueOf(404)));
 
-        return ResponseEntity.ok().build();
-    }
-
+    return ResponseEntity.ok().build();
+  }
 }

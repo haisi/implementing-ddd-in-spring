@@ -5,12 +5,14 @@ import jakarta.persistence.PersistenceContext;
 import li.selman.ddd.statement.CustomizedSave;
 import li.selman.ddd.statement.Statement;
 
+@SuppressWarnings("NullAway.Init")
 public class CustomizedSavedImpl implements CustomizedSave<Statement> {
 
-    private @PersistenceContext EntityManager entityManager;
+  @SuppressWarnings("unused")
+  private @PersistenceContext EntityManager entityManager;
 
-    @Override
-    public <S extends Statement> S save(S entity) {
-        return null;
-    }
+  @Override
+  public <S extends Statement> S save(S entity) {
+    return entity;
+  }
 }

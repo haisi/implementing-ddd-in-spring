@@ -8,8 +8,7 @@ import org.springframework.modulith.Modulith;
 @Modulith
 public class ImplementingDddApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(ImplementingDddApplication.class, args);
-    }
-
+  public static void main(String[] args) {
+    SpringApplication.run(ImplementingDddApplication.class, args);
+  }
 }
