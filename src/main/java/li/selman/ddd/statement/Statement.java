@@ -1,12 +1,16 @@
 package li.selman.ddd.statement;
 
 import jakarta.persistence.*;
+import li.selman.ddd.fsm.Transition;
+import li.selman.ddd.fsm.Transitionable;
 import li.selman.ddd.statement.Reaction.ReactionId;
+import org.hibernate.proxy.HibernateProxy;
 import org.jmolecules.ddd.types.AggregateRoot;
 import org.jmolecules.ddd.types.Identifier;
 import org.jmolecules.ddd.types.ValueObject;
 import org.jmolecules.event.types.DomainEvent;
 import org.jmolecules.jpa.JMoleculesJpa;
+import org.slf4j.Logger;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
 import java.time.LocalDate;
@@ -16,6 +20,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
+import static li.selman.ddd.statement.Statement.State.*;
+import static org.slf4j.LoggerFactory.getLogger;
+
 /**
  *
  */
@@ -24,6 +31,8 @@ import java.util.Objects;
 public class Statement
         extends AbstractAggregateRoot<Statement>
         implements AggregateRoot<Statement, Statement.StatementId> {
+
+    private static final Logger log = getLogger(Statement.class);
 
     @EmbeddedId
     @AttributeOverride(name = "date", column = @Column(name = "made_at"))
@@ -71,13 +80,25 @@ public class Statement
     }
 
     void reacted(Reaction reaction) {
-        // TODO only allow if state is OPEN
-        if (!State.OPEN.equals(state)) {
+        if (!OPEN.equals(state)) {
             throw new IllegalArgumentException();
         }
         this.reactions.add(Objects.requireNonNull(reaction));
         this.registerEvent(new ReactionAdded(id, reaction.getId()));
     }
+
+    void startReview() {
+        log.info("Starting review");
+        updateState(StateFsm.TO_IN_REVIEW);
+    }
+
+    private void updateState(StateFsm toState) {
+        State prevState = this.state;
+        this.state = toState.fromState(this.state);
+        this.registerEvent(new StatementInReview(this.id));
+        log.info("Changed state from '{}' to '{}'", prevState, state);
+    }
+
 
     @Override
     public StatementId getId() {
@@ -125,12 +146,37 @@ public class Statement
     public record ReactionAdded(StatementId statementId, ReactionId reactionId) implements DomainEvent {
     }
 
+    public record StatementInReview(StatementId statementId) implements DomainEvent {
+    }
+
     @Embeddable
     public record AuthorId(String value) implements ValueObject {
     }
 
     public enum State {
-        OPEN, CLOSED
+        OPEN, IN_REVIEW, CLOSED
+    }
+
+    public enum StateFsm implements Transitionable<State> {
+        TO_IN_REVIEW(Transition.from(OPEN, IN_REVIEW).to(IN_REVIEW)),
+        TO_CLOSED(Transition.from(OPEN, IN_REVIEW, CLOSED).to(CLOSED));
+
+        private final Transition<State> transition;
+
+        StateFsm(Transition<State> transition) {
+            this.transition = transition;
+        }
+
+        @Override
+        public Transition<State> getTransition() {
+            return transition;
+        }
+
+        @Override
+        public State fromState(State current) {
+            return this.transition.evaluateTransition(current, () ->
+                    new IllegalArgumentException("State transition from '%s' to '%s' in invalid".formatted(current, transition.getFinalState())));
+        }
     }
 
     public enum Type {
@@ -151,5 +197,34 @@ public class Statement
             }
             throw new IllegalArgumentException("Unknown statement type: " + code);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "Statement{" +
+                "authorId=" + authorId +
+                ", state=" + state +
+                ", version=" + version +
+                ", id=" + id +
+                '}';
+    }
+
+
+    @Override
+    public final boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        Class<?> oEffectiveClass = o instanceof HibernateProxy ? ((HibernateProxy) o).getHibernateLazyInitializer().getPersistentClass() : o.getClass();
+        Class<?> thisEffectiveClass = this instanceof HibernateProxy ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass() : this.getClass();
+        if (thisEffectiveClass != oEffectiveClass) return false;
+        Statement statement = (Statement) o;
+        return getId() != null && Objects.equals(getId(), statement.getId());
+    }
+
+    @Override
+    public final int hashCode() {
+        return this instanceof HibernateProxy
+                ? ((HibernateProxy) this).getHibernateLazyInitializer().getPersistentClass().hashCode()
+                : getClass().hashCode();
     }
 }
