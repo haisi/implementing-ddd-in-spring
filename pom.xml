@@ -89,7 +89,17 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- jMolecules -->
+        <dependency>
+            <groupId>io.hypersistence</groupId>
+            <artifactId>hypersistence-utils-hibernate-63</artifactId>
+            <version>3.8.0</version>
+        </dependency>
+
+        <!--
+        jMolecules: Annotations and interfaces to enrich codebase with tactical DDD and architecture concepts.
+        Helps bridge the model-code and architecture-code gap.
+        See for more: https://github.com/xmolecules/jmolecules
+        -->
         <dependency>
             <groupId>org.jmolecules</groupId>
             <artifactId>jmolecules-ddd</artifactId>
@@ -106,6 +116,10 @@
             <version>${jmolecules.version}</version>
         </dependency>
 
+        <!--
+        jMolecules Integrations:
+        See for more: https://github.com/xmolecules/jmolecules-integrations
+        -->
         <dependency>
             <groupId>org.jmolecules.integrations</groupId>
             <artifactId>jmolecules-apt</artifactId>
@@ -127,6 +141,9 @@
             <version>${jmolecules-integrations.version}</version>
         </dependency>
 
+<!-- =============================================================================================================== -->
+<!-- ============================================== Test Dependencies ============================================== -->
+<!-- =============================================================================================================== -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -160,6 +177,7 @@
             <version>${jmolecules-integrations.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- Test Container -->
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
@@ -168,6 +186,17 @@
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <!--
+            Used in Java unit tests to verify whether the contract for the equals and hashCode methods in a class is met.
+            See for more: https://jqno.nl/equalsverifier/manual/
+            -->
+            <groupId>nl.jqno.equalsverifier</groupId>
+            <artifactId>equalsverifier</artifactId>
+            <version>3.16.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -202,11 +231,22 @@
                         <arg>-Xplugin:ErrorProne -XepOpt:NullAway:AnnotatedPackages=li.selman.ddd</arg>
                     </compilerArgs>
                     <annotationProcessorPaths>
+                        <!--
+                        - Analyses AST to spot bugs: https://errorprone.info/bugpatterns
+                            - Can be extended with custom or third-party bug patterns: https://error-prone.picnic.tech/
+                        - Can automatically patch code not matching a patter
+                            - Can be extended with custom or third-part patchers
+                        -->
                         <path>
                             <groupId>com.google.errorprone</groupId>
                             <artifactId>error_prone_core</artifactId>
                             <version>2.23.0</version>
                         </path>
+                        <!--
+                        - Helps eliminate NullPointerExceptions
+                        - Requires error prone
+                        See for more: https://github.com/uber/NullAway/wiki
+                        -->
                         <path>
                             <groupId>com.uber.nullaway</groupId>
                             <artifactId>nullaway</artifactId>
@@ -216,6 +256,15 @@
                 </configuration>
             </plugin>
             <plugin>
+                <!--
+                - Code formatter verifying and applying the google-java-format.
+                - Runs as part of the verify phase.
+                - Apart from fmt:check, the plugin can also auto format the code using 'mvn fmt:format'
+                - Install the IntelliJ plugin and configure your IntelliJ JRE Config
+                https://github.com/google/google-java-format/blob/master/README.md#intellij-android-studio-and-other-jetbrains-ides
+
+                See for more infos: https://github.com/spotify/fmt-maven-plugin
+                -->
                 <groupId>com.spotify.fmt</groupId>
                 <artifactId>fmt-maven-plugin</artifactId>
                 <version>2.23</version>
@@ -227,12 +276,39 @@
                     </execution>
                 </executions>
             </plugin>
+            <!--            <plugin>-->
+            <!--                <groupId>org.asciidoctor</groupId>-->
+            <!--                <artifactId>asciidoctor-maven-plugin</artifactId>-->
+            <!--                <version>2.2.1</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>generate-docs</id>-->
+            <!--                        <phase>prepare-package</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>process-asciidoc</goal>-->
+            <!--                        </goals>-->
+            <!--                        <configuration>-->
+            <!--                            <backend>html</backend>-->
+            <!--                            <doctype>book</doctype>-->
+            <!--                        </configuration>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--                <dependencies>-->
+            <!--                    <dependency>-->
+            <!--                        <groupId>org.springframework.restdocs</groupId>-->
+            <!--                        <artifactId>spring-restdocs-asciidoctor</artifactId>-->
+            <!--                    </dependency>-->
+            <!--                </dependencies>-->
+            <!--            </plugin>-->
         </plugins>
     </build>
 
     <profiles>
         <profile>
-            <!-- Does not play well with ArchUnit -->
+            <!--
+            Does not play well with ArchUnit
+            See: https://github.com/xmolecules/jmolecules-integrations/issues/245
+            -->
             <id>jmolecules-bytebuddy</id>
             <dependencies>
                 <dependency>
