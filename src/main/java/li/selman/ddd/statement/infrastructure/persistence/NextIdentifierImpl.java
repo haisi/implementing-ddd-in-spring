@@ -9,6 +9,6 @@ public class NextIdentifierImpl implements NextIdentifier {
   @Override
   public Statement.StatementId nextIdentifier() {
     return new Statement.StatementId(
-        LocalDate.now(ZoneId.systemDefault()), Statement.Type.HELPFUL, 1);
+        LocalDate.now(ZoneId.systemDefault()), Statement.Source.TWITTER, 1);
   }
 }
