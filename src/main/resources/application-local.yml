@@ -14,6 +14,10 @@ spring:
   flyway:
     enabled: true
     locations: classpath:/db/migration,classpath:/db/testdata
+  docker:
+    compose:
+      # Just start compose, so devs can connect to running Postgres instance
+      lifecycle-management: start_only
 
 server:
   error:
