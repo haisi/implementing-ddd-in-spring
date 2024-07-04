@@ -141,9 +141,9 @@
             <version>${jmolecules-integrations.version}</version>
         </dependency>
 
-<!-- =============================================================================================================== -->
-<!-- ================================================= Dev Tools  ================================================== -->
-<!-- =============================================================================================================== -->
+        <!-- =============================================================================================================== -->
+        <!-- ================================================= Dev Tools  ================================================== -->
+        <!-- =============================================================================================================== -->
         <dependency>
             <!--
             Refreshes the Spring Context on compilation on running app server.
@@ -164,9 +164,9 @@
             <optional>true</optional>
         </dependency>
 
-<!-- =============================================================================================================== -->
-<!-- ============================================== Test Dependencies ============================================== -->
-<!-- =============================================================================================================== -->
+        <!-- =============================================================================================================== -->
+        <!-- ============================================== Test Dependencies ============================================== -->
+        <!-- =============================================================================================================== -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
@@ -331,30 +331,30 @@
                     <fail>true</fail>
                 </configuration>
             </plugin>
-            <!--            <plugin>-->
-            <!--                <groupId>org.asciidoctor</groupId>-->
-            <!--                <artifactId>asciidoctor-maven-plugin</artifactId>-->
-            <!--                <version>2.2.1</version>-->
-            <!--                <executions>-->
-            <!--                    <execution>-->
-            <!--                        <id>generate-docs</id>-->
-            <!--                        <phase>prepare-package</phase>-->
-            <!--                        <goals>-->
-            <!--                            <goal>process-asciidoc</goal>-->
-            <!--                        </goals>-->
-            <!--                        <configuration>-->
-            <!--                            <backend>html</backend>-->
-            <!--                            <doctype>book</doctype>-->
-            <!--                        </configuration>-->
-            <!--                    </execution>-->
-            <!--                </executions>-->
-            <!--                <dependencies>-->
-            <!--                    <dependency>-->
-            <!--                        <groupId>org.springframework.restdocs</groupId>-->
-            <!--                        <artifactId>spring-restdocs-asciidoctor</artifactId>-->
-            <!--                    </dependency>-->
-            <!--                </dependencies>-->
-            <!--            </plugin>-->
+            <plugin>
+                <groupId>org.asciidoctor</groupId>
+                <artifactId>asciidoctor-maven-plugin</artifactId>
+                <version>2.2.6</version>
+                <executions>
+                    <execution>
+                        <id>generate-docs</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                            <goal>process-asciidoc</goal>
+                        </goals>
+                        <configuration>
+                            <backend>html</backend>
+                            <doctype>book</doctype>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.springframework.restdocs</groupId>
+                        <artifactId>spring-restdocs-asciidoctor</artifactId>
+                    </dependency>
+                </dependencies>
+            </plugin>
         </plugins>
     </build>
 

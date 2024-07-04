@@ -1,6 +1,7 @@
 package li.selman.ddd.common;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -16,6 +17,7 @@ import org.springframework.hateoas.LinkRelation;
 import org.springframework.hateoas.client.LinkDiscoverer;
 import org.springframework.hateoas.client.LinkDiscoverers;
 import org.springframework.mock.web.MockHttpServletResponse;
+import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultMatcher;
@@ -31,11 +33,11 @@ public abstract class AbstractWebIntegrationTest {
   protected MockMvc mvc;
 
   @BeforeEach
-  void setUp() {
-
+  void setUp(RestDocumentationContextProvider restDocumentation) {
     mvc =
         MockMvcBuilders.webAppContextSetup(context)
             .defaultRequest(get("/").locale(Locale.US))
+            .apply(documentationConfiguration(restDocumentation))
             .alwaysDo(print())
             .build();
   }
