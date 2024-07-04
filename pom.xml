@@ -142,6 +142,29 @@
         </dependency>
 
 <!-- =============================================================================================================== -->
+<!-- ================================================= Dev Tools  ================================================== -->
+<!-- =============================================================================================================== -->
+        <dependency>
+            <!--
+            Refreshes the Spring Context on compilation on running app server.
+            Meaning, during development restarting the app is required fewer times.
+             -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <!--
+            Automatically starts up the local docker-compose file.
+             -->
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-docker-compose</artifactId>
+            <scope>runtime</scope>
+            <optional>true</optional>
+        </dependency>
+
+<!-- =============================================================================================================== -->
 <!-- ============================================== Test Dependencies ============================================== -->
 <!-- =============================================================================================================== -->
         <dependency>
