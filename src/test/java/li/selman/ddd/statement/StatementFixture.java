@@ -1,8 +1,12 @@
 package li.selman.ddd.statement;
 
+import li.selman.ddd.statement.Statement.StatementId;
+
 import java.time.LocalDate;
 
 public class StatementFixture {
+
+  public static final StatementId STATEMENT_ID = new StatementId(LocalDate.of(2022, 12, 4), Statement.Source.YOUTUBE, 2);
 
   public static Builder aStatement() {
     return new Builder();
@@ -12,12 +16,12 @@ public class StatementFixture {
 
     private LocalDate date = LocalDate.of(2022, 12, 4);
 
-    private Statement.Type type = Statement.Type.HELPFUL;
+    private Statement.Source source = Statement.Source.TWITTER;
 
     private Integer sequenceOfDay = 1;
 
-    public Builder of(Statement.Type type) {
-      this.type = type;
+    public Builder of(Statement.Source source) {
+      this.source = source;
       return this;
     }
 
@@ -32,7 +36,7 @@ public class StatementFixture {
     }
 
     public Statement build() {
-      var id = new Statement.StatementId(date, type, sequenceOfDay);
+      var id = new StatementId(date, source, sequenceOfDay);
       return new Statement(id);
     }
   }

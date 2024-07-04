@@ -31,8 +31,8 @@ public class Statement extends AbstractAggregateRoot<Statement>
   private static final Logger log = getLogger(Statement.class);
 
   @EmbeddedId
-  @AttributeOverride(name = "date", column = @Column(name = "made_at"))
-  @AttributeOverride(name = "type", column = @Column(name = "type"))
+  @AttributeOverride(name = "madeAt", column = @Column(name = "made_at"))
+  @AttributeOverride(name = "source", column = @Column(name = "source"))
   @AttributeOverride(name = "sequenceOfDay", column = @Column(name = "sequence_of_day"))
   private StatementId id;
 
@@ -105,14 +105,14 @@ public class Statement extends AbstractAggregateRoot<Statement>
 
   @Embeddable
   public record StatementId(
-      LocalDate date, @Enumerated(EnumType.STRING) Type type, Integer sequenceOfDay)
+          LocalDate madeAt, @Enumerated(EnumType.STRING) Source source, Integer sequenceOfDay)
       implements Identifier {
 
     private static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyyMMdd");
 
     public String toBusinessId() {
-      String dateFormatted = date.format(DATE_PATTERN);
-      String typeCode = type.code;
+      String dateFormatted = madeAt.format(DATE_PATTERN);
+      String typeCode = source.code;
       return "%s-%s-%d".formatted(dateFormatted, typeCode, sequenceOfDay);
     }
 
@@ -122,10 +122,10 @@ public class Statement extends AbstractAggregateRoot<Statement>
         throw new IllegalArgumentException("Not a valid statement id: " + string);
       }
       LocalDate date = LocalDate.parse(split[0], DATE_PATTERN);
-      Type type = Type.fromCode(split[1]);
+      Source source = Source.fromCode(split[1]);
       Integer sequenceOfDay = Integer.valueOf(split[2]);
 
-      return new StatementId(date, type, sequenceOfDay);
+      return new StatementId(date, source, sequenceOfDay);
     }
 
     @Override
@@ -176,23 +176,23 @@ public class Statement extends AbstractAggregateRoot<Statement>
     }
   }
 
-  public enum Type {
-    HELPFUL("HP"),
-    PROVOCATION("PC");
+  public enum Source {
+    TWITTER("X"),
+    YOUTUBE("YT");
 
     final String code;
 
-    Type(String code) {
+    Source(String code) {
       this.code = code;
     }
 
-    public static Type fromCode(String code) {
-      for (Type type : Type.values()) {
-        if (type.code.equals(code)) {
-          return type;
+    public static Source fromCode(String code) {
+      for (Source source : Source.values()) {
+        if (source.code.equals(code)) {
+          return source;
         }
       }
-      throw new IllegalArgumentException("Unknown statement type: " + code);
+      throw new IllegalArgumentException("Unknown statement source: " + code);
     }
   }
 

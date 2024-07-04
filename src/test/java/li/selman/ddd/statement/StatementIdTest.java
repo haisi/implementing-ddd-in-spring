@@ -11,7 +11,7 @@ class StatementIdTest {
   void toBusinessId() {
     // given
     var statementId =
-        new Statement.StatementId(LocalDate.of(2024, 4, 30), Statement.Type.HELPFUL, 99);
+        new Statement.StatementId(LocalDate.of(2024, 4, 30), Statement.Source.TWITTER, 99);
     // then
     String businessId = statementId.toBusinessId();
     // then
