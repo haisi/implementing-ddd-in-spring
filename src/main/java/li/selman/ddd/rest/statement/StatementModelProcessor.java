@@ -9,7 +9,6 @@ import org.springframework.stereotype.Component;
 public class StatementModelProcessor implements RepresentationModelProcessor<EntityModel<Statement>> {
   @Override
   public EntityModel<Statement> process(EntityModel<Statement> model) {
-    System.out.println("whyyy are you not called?");
     return model;
   }
 }
