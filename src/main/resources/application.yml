@@ -1,3 +1,7 @@
 spring:
   application:
     name: implementing-ddd
+  mvc:
+    problemdetails:
+      # RFC 7807 Problem Details support
+      enabled: true
