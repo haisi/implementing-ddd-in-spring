@@ -1,6 +1,5 @@
 package li.selman.ddd;
 
-import li.selman.ddd.statement.Statement;
 import li.selman.ddd.statement.Statement.StatementId;
 import li.selman.ddd.statement.infrastructure.json.JacksonModuleStatement;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -31,13 +30,18 @@ class JsonTests {
         "19990101-YT-999999",
       })
   void serializeStatementId(String id) throws IOException {
-    // given
+    // given - a Java StatementId Object containing multiple fields
     var statementId = StatementId.fromString(id);
-
-    // when
+    // when - Jackson serializes the object
     JsonContent<StatementId> json = jacksonTester.write(statementId);
-
-    // then
+    // then - JSON is a single string
     assertThat(json).extractingJsonPathStringValue("$").isEqualTo(id);
+
+    // given - JSON StatementId, i.e. a single string field
+    String jsonString = json.getJson();
+    // when - Jackson deserializes the JSON
+    StatementId parsedStatementId = jacksonTester.parseObject(jsonString);
+    // then - the created Java object is the same as at the beginning
+    assertThat(parsedStatementId).isEqualTo(statementId);
   }
 }
