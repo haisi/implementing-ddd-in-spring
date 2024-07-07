@@ -7,6 +7,9 @@ import org.springframework.core.convert.converter.ConditionalGenericConverter;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
+/**
+ * Enables passing StatementId to Spring MVC controllers.
+ */
 @Component
 class StringToStatementIdConverter implements ConditionalGenericConverter {
   @Override
