@@ -105,7 +105,7 @@ public class Statement extends AbstractAggregateRoot<Statement>
 
   @Embeddable
   public record StatementId(
-          LocalDate madeAt, @Enumerated(EnumType.STRING) Source source, Integer sequenceOfDay)
+      LocalDate madeAt, @Enumerated(EnumType.STRING) Source source, Integer sequenceOfDay)
       implements Identifier {
 
     private static final DateTimeFormatter DATE_PATTERN = DateTimeFormatter.ofPattern("yyyyMMdd");

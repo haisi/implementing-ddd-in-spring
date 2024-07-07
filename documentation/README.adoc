@@ -1,0 +1,17 @@
+= Speechli — not so free speech Evergreen Example
+
+This project serves as:
+
+* a showcase of how to implement domain-driven design using Java and Spring-Boot
+* a reference implementation for future greenfield projects
+* a playground to try cool new stuff
+
+:toc:
+
+== Context
+
+Speechli is a platform to manage the public and not so public expressions of humans.
+
+== Discovery
+
+The first thing we started with was domain exploration with the help of Big Picture EventStorming.

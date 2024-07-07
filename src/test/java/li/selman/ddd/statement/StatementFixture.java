@@ -1,12 +1,12 @@
 package li.selman.ddd.statement;
 
-import li.selman.ddd.statement.Statement.StatementId;
-
 import java.time.LocalDate;
+import li.selman.ddd.statement.Statement.StatementId;
 
 public class StatementFixture {
 
-  public static final StatementId STATEMENT_ID = new StatementId(LocalDate.of(2022, 12, 4), Statement.Source.YOUTUBE, 2);
+  public static final StatementId STATEMENT_ID =
+      new StatementId(LocalDate.of(2022, 12, 4), Statement.Source.YOUTUBE, 2);
 
   public static Builder aStatement() {
     return new Builder();

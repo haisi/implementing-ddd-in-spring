@@ -50,7 +50,7 @@ class StatementControllerIntegrationTest extends AbstractWebIntegrationTest {
       mvc.perform(get("/statement/" + statement.getId()))
           .andExpect(status().isOk())
           .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
-          .andExpect(jsonPath("$.id", notNullValue()));
+          .andExpect(jsonPath("$.id", is(statement.getId().toBusinessId())));
     }
 
     @Test
@@ -65,43 +65,50 @@ class StatementControllerIntegrationTest extends AbstractWebIntegrationTest {
           .andExpect(status().isNotFound())
           .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
           .andExpect(jsonPath("$.status", is(404)))
-          .andDo(document("statement", responseFields( // todo extract common Problem Details into List
-                  fieldWithPath("status").type(JsonFieldType.NUMBER).description("HTTP Verb"),
-                  fieldWithPath("type").type(JsonFieldType.STRING).description(""),
-                  fieldWithPath("title").type(JsonFieldType.STRING).description(""),
-                  fieldWithPath("detail").type(JsonFieldType.STRING).description(""),
-                  fieldWithPath("instance").type(JsonFieldType.STRING).description("The called endpoint"),
-                  fieldWithPath("errorCode").type(JsonFieldType.STRING).description(""), // TODO why string?
-                  fieldWithPath("timestamp").type(JsonFieldType.STRING).description("")
-          )));
+          .andDo(
+              document(
+                  "statement",
+                  responseFields( // todo extract common Problem Details into List
+                      fieldWithPath("status").type(JsonFieldType.NUMBER).description("HTTP Verb"),
+                      fieldWithPath("type").type(JsonFieldType.STRING).description(""),
+                      fieldWithPath("title").type(JsonFieldType.STRING).description(""),
+                      fieldWithPath("detail").type(JsonFieldType.STRING).description(""),
+                      fieldWithPath("instance")
+                          .type(JsonFieldType.STRING)
+                          .description("The called endpoint"),
+                      fieldWithPath("errorCode")
+                          .type(JsonFieldType.STRING)
+                          .description(""), // TODO why string?
+                      fieldWithPath("timestamp").type(JsonFieldType.STRING).description(""))));
     }
   }
 
   private FieldDescriptor[] getProductFieldDescriptor() {
-    return new FieldDescriptor[]{
-            fieldWithPath("_links").ignored(),
-            fieldWithPath("_links.self").ignored(),
-            fieldWithPath("_links.self.href").ignored(),
-            fieldWithPath("_embedded").ignored(),
-            fieldWithPath("_embedded.products").ignored(),
-            fieldWithPath("_embedded.products[].id")
-                    .description("The unique id of the product entity").type(JsonFieldType.NUMBER),
-            fieldWithPath("_embedded.products[].name")
-                    .description("The name of the product").type(JsonFieldType.STRING),
-
-            fieldWithPath("_embedded.products[]._links").ignored(),
-
-            fieldWithPath("_embedded.products[]._links.self")
-                    .description("Links to the entity itself").type(JsonFieldType.OBJECT),
-            fieldWithPath("_embedded.products[]._links.self.href").ignored(),
-
-            fieldWithPath("_embedded.products[]._links.products")
-                    .description("Links to all available products").type(JsonFieldType.OBJECT),
-            fieldWithPath("_embedded.products[]._links.products.href").ignored(),
-
-            fieldWithPath("_embedded.products[]._links.image")
-                    .description("Links to the articles image").type(JsonFieldType.OBJECT),
-            fieldWithPath("_embedded.products[]._links.image.href").ignored(),
+    return new FieldDescriptor[] {
+      fieldWithPath("_links").ignored(),
+      fieldWithPath("_links.self").ignored(),
+      fieldWithPath("_links.self.href").ignored(),
+      fieldWithPath("_embedded").ignored(),
+      fieldWithPath("_embedded.products").ignored(),
+      fieldWithPath("_embedded.products[].id")
+          .description("The unique id of the product entity")
+          .type(JsonFieldType.NUMBER),
+      fieldWithPath("_embedded.products[].name")
+          .description("The name of the product")
+          .type(JsonFieldType.STRING),
+      fieldWithPath("_embedded.products[]._links").ignored(),
+      fieldWithPath("_embedded.products[]._links.self")
+          .description("Links to the entity itself")
+          .type(JsonFieldType.OBJECT),
+      fieldWithPath("_embedded.products[]._links.self.href").ignored(),
+      fieldWithPath("_embedded.products[]._links.products")
+          .description("Links to all available products")
+          .type(JsonFieldType.OBJECT),
+      fieldWithPath("_embedded.products[]._links.products.href").ignored(),
+      fieldWithPath("_embedded.products[]._links.image")
+          .description("Links to the articles image")
+          .type(JsonFieldType.OBJECT),
+      fieldWithPath("_embedded.products[]._links.image.href").ignored(),
     };
   }
 }

@@ -5,7 +5,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 public class ResourceNotFoundException extends ResponseStatusException {
 
-    public ResourceNotFoundException(String reason) {
-        super(HttpStatusCode.valueOf(404), reason);
-    }
+  public ResourceNotFoundException(String reason) {
+    super(HttpStatusCode.valueOf(404), reason);
+  }
 }
