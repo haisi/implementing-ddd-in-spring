@@ -15,6 +15,6 @@ class StatementIdTest {
     // then
     String businessId = statementId.toBusinessId();
     // then
-    assertThat(businessId).isEqualTo("20240430-HP-99");
+    assertThat(businessId).isEqualTo("20240430-X-99");
   }
 }

@@ -20,10 +20,10 @@ public interface DeepCopyAggregateForInMemoryRepository {
    * }
    * </code>
    *
-   * @param object
-   * @return
-   * @param <T>
-   * @param <ID>
+   * @param object which is added to the repository before a deep copy
+   * @return deep copy of object
+   * @param <T> AggregateRoot
+   * @param <ID> Identifier
    */
   <T extends AggregateRoot<T, ID>, ID extends Identifier> T deepCopy(T object);
 }

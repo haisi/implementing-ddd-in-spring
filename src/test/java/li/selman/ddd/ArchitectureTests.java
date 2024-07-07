@@ -26,8 +26,9 @@ class ArchitectureTests {
   @ArchTest ArchRule onionRules = JMoleculesArchitectureRules.ensureOnionSimple();
 
   /**
-   * @see <a href="https://docs.spring.io/spring-modulith/reference/verification.html">Verifying
-   *     Application Module Structure</a>
+   * Verifying application module structure
+   *
+   * @see <a href="https://docs.spring.io/spring-modulith/reference/verification.html">Reference documentation on verification</a>
    */
   ApplicationModules modules = ApplicationModules.of(ImplementingDddApplication.class);
 

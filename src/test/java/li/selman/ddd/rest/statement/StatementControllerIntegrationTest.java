@@ -82,33 +82,4 @@ class StatementControllerIntegrationTest extends AbstractWebIntegrationTest {
                       fieldWithPath("timestamp").type(JsonFieldType.STRING).description(""))));
     }
   }
-
-  private FieldDescriptor[] getProductFieldDescriptor() {
-    return new FieldDescriptor[] {
-      fieldWithPath("_links").ignored(),
-      fieldWithPath("_links.self").ignored(),
-      fieldWithPath("_links.self.href").ignored(),
-      fieldWithPath("_embedded").ignored(),
-      fieldWithPath("_embedded.products").ignored(),
-      fieldWithPath("_embedded.products[].id")
-          .description("The unique id of the product entity")
-          .type(JsonFieldType.NUMBER),
-      fieldWithPath("_embedded.products[].name")
-          .description("The name of the product")
-          .type(JsonFieldType.STRING),
-      fieldWithPath("_embedded.products[]._links").ignored(),
-      fieldWithPath("_embedded.products[]._links.self")
-          .description("Links to the entity itself")
-          .type(JsonFieldType.OBJECT),
-      fieldWithPath("_embedded.products[]._links.self.href").ignored(),
-      fieldWithPath("_embedded.products[]._links.products")
-          .description("Links to all available products")
-          .type(JsonFieldType.OBJECT),
-      fieldWithPath("_embedded.products[]._links.products.href").ignored(),
-      fieldWithPath("_embedded.products[]._links.image")
-          .description("Links to the articles image")
-          .type(JsonFieldType.OBJECT),
-      fieldWithPath("_embedded.products[]._links.image.href").ignored(),
-    };
-  }
 }
