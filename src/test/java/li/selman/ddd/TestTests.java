@@ -33,6 +33,7 @@ class TestTests {
    * Read chapter "Collection-Oriented Repositories" in "Implementing Domain-Driven-Design" by
    * Vaughn Vernon for further details.
    */
+  @SuppressWarnings("UnusedVariable")
   @ArchTest
   private final ArchRule repositoriesHaveInMemoryImplementation =
       ArchRuleDefinition.classes()

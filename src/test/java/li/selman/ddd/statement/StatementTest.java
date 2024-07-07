@@ -1,12 +1,12 @@
 package li.selman.ddd.statement;
 
-import nl.jqno.equalsverifier.EqualsVerifier;
+import li.selman.ddd.EqualsTester;
 import org.junit.jupiter.api.Test;
 
 class StatementTest {
 
   @Test
   public void equalsContract() {
-    EqualsVerifier.simple().forClass(Statement.class).verify();
+    EqualsTester.testJpaEquals(Statement.class);
   }
 }
