@@ -1,0 +1,23 @@
+= Sample documentation
+:generated-docs: ../../../target/spring-modulith-docs
+
+// https://intellij-asciidoc-plugin.ahus1.de/docs/users-guide/features/advanced/spring-rest-docs.html
+
+== Overview
+plantuml::{generated-docs}/components.puml[,,format=svg]
+
+== Shared
+plantuml::{generated-docs}/module-statement.puml[,,format=svg]
+include::{generated-docs}/module-statement.adoc[]
+
+== Common
+plantuml::{generated-docs}/module-common.puml[,,format=svg]
+include::{generated-docs}/module-common.adoc[]
+
+== FSM
+plantuml::{generated-docs}/module-fsm.puml[,,format=svg]
+include::{generated-docs}/module-fsm.adoc[]
+
+== REST
+plantuml::{generated-docs}/module-rest.puml[,,format=svg]
+include::{generated-docs}/module-rest.adoc[]
