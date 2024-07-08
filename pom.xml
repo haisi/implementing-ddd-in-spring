@@ -362,15 +362,21 @@
     <profiles>
         <profile>
             <!--
-            Does not play well with ArchUnit
-            See: https://github.com/xmolecules/jmolecules-integrations/issues/245
+            Just to peek at what Oliver would generate for us.
+            A plugin that automatically generates bytecode based on jMolecules annotations and
+            the technologies used in the project.
+            For example, if you have JPA in your classpath and your aggregate class implements jMolecules' AggregateRoot
+            interface, then jmolecules-bytebuddy automatically enriches your class with the necessary JPA annotations.
+            This greatly reduced clutter in your domain classes and "non-default" values become more evident, e.g.
+            you explicitly want to use a different table name for the annotation, which visually drowns in the regular JPA code.
             -->
             <id>jmolecules-bytebuddy</id>
             <dependencies>
                 <dependency>
                     <groupId>org.jmolecules.integrations</groupId>
-                    <artifactId>jmolecules-bytebuddy</artifactId>
+                    <artifactId>jmolecules-bytebuddy-nodep</artifactId>
                     <version>${jmolecules-integrations.version}</version>
+                    <scope>provided</scope>
                 </dependency>
             </dependencies>
             <build>
@@ -386,13 +392,6 @@
                                 </goals>
                             </execution>
                         </executions>
-                        <dependencies>
-                            <dependency> <!-- Apply jMolecules transformations -->
-                                <groupId>org.jmolecules.integrations</groupId>
-                                <artifactId>jmolecules-bytebuddy</artifactId>
-                                <version>${jmolecules-integrations.version}</version>
-                            </dependency>
-                        </dependencies>
                     </plugin>
                 </plugins>
             </build>
