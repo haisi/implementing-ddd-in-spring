@@ -349,23 +349,52 @@
                 </executions>
             </plugin>
             <plugin>
+                <!--                https://github.com/odrotbohm/spring-modulith-deep-dive/blob/681cbca11646c101383fd58a45cd47773a059875/pom.xml#L48 -->
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
-                <version>2.2.6</version>
+                <version>3.0.0</version>
+                <configuration>
+                    <doctype>book</doctype>
+                    <attributes>
+                        <docinfo>shared</docinfo>
+                        <icons>font</icons>
+                        <sectids>false</sectids>
+                        <imagesdir>images</imagesdir>
+                        <spring-modulith-version>${spring-modulith.version}</spring-modulith-version>
+                        <toclevels>3</toclevels>
+                    </attributes>
+                    <requires>
+                        <require>asciidoctor-diagram</require>
+                    </requires>
+                </configuration>
                 <executions>
                     <execution>
-                        <id>generate-docs</id>
-                        <phase>prepare-package</phase>
+                        <id>html</id>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>process-asciidoc</goal>
                         </goals>
                         <configuration>
-                            <backend>html</backend>
-                            <doctype>book</doctype>
+                            <backend>spring-html</backend>
+                            <attributes>
+                                <source-highlighter>highlight.js</source-highlighter>
+                                <highlightjsdir>js/highlight</highlightjsdir>
+                                <highlightjs-theme>github</highlightjs-theme>
+                            </attributes>
                         </configuration>
                     </execution>
                 </executions>
                 <dependencies>
+                    <dependency>
+                        <groupId>org.asciidoctor</groupId>
+                        <artifactId>asciidoctorj-diagram</artifactId>
+                        <version>2.3.0</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>io.spring.asciidoctor.backends</groupId>
+                        <artifactId>spring-asciidoctor-backends</artifactId>
+                        <version>0.0.7</version>
+                    </dependency>
                     <dependency>
                         <groupId>org.springframework.restdocs</groupId>
                         <artifactId>spring-restdocs-asciidoctor</artifactId>
