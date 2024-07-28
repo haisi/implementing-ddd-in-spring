@@ -5,3 +5,6 @@ spring:
     problemdetails:
       # RFC 7807 Problem Details support
       enabled: true
+server:
+  compression:
+    enabled: true
