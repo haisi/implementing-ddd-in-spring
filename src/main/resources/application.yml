@@ -8,3 +8,19 @@ spring:
 server:
   compression:
     enabled: true
+logging:
+  pattern:
+    # Take the span id and trace id from the Mapped Diagnostic Context (MDC) and put them into the log message.
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+          - health
+          - prometheus
+  metrics:
+    distribution:
+      percentiles-histogram:
+        # Enable histogram buckets for Exemplars
+        http.server.request: true
