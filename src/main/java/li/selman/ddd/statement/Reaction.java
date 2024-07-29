@@ -1,5 +1,7 @@
 package li.selman.ddd.statement;
 
+import jakarta.persistence.AttributeOverride;
+import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.EmbeddedId;
 import org.jmolecules.ddd.types.Entity;
@@ -10,6 +12,7 @@ public class Reaction implements Entity<Statement, Reaction.ReactionId> {
 
   @EmbeddedId
   @SuppressWarnings("NullAway.Init")
+  @AttributeOverride(name = "value", column = @Column(name = "id"))
   private ReactionId id;
 
   protected Reaction() {
@@ -31,5 +34,5 @@ public class Reaction implements Entity<Statement, Reaction.ReactionId> {
   }
 
   @Embeddable
-  public record ReactionId(String value) implements Identifier {}
+  public record ReactionId(Integer value) implements Identifier {}
 }

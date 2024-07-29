@@ -51,6 +51,11 @@ public class Statement extends AbstractAggregateRoot<Statement>
       orphanRemoval = true,
       cascade = {CascadeType.ALL},
       mappedBy = "")
+  @JoinColumns({
+          @JoinColumn(name = "madeAt", referencedColumnName = "made_at"),
+          @JoinColumn(name = "source", referencedColumnName = "source"),
+          @JoinColumn(name = "sequenceOfDay", referencedColumnName = "sequence_of_day")
+  })
   private List<Reaction> reactions = new ArrayList<>();
 
   protected Statement() {

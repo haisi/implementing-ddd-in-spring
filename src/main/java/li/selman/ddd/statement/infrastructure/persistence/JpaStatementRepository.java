@@ -48,11 +48,10 @@ class JpaStatementRepository implements StatementRepository {
 interface StatementIdProjection {
   String getId();
 
-  String getName();
 }
 
 interface SpringDataBookRepository extends JpaRepository<Statement, Statement.StatementId> {
   @Query()
-  Optional<StatementIdProjection> findByAuthorIdAndStateAndId(
+  Optional<StatementIdProjection> findByAuthorIdAndState(
       Statement.AuthorId authorId, Statement.State state);
 }
