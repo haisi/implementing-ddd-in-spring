@@ -113,3 +113,7 @@ links to navigate from resource to resource.
 
 operation::statement[snippets='http-request,request-body']
 operation::statement[snippets='response-fields,http-response']
+
+== Architecture Decision Records
+
+include::adr/001-jMolecules-for-Architecture-Explicit-Source-Code.adoc[]
