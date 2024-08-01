@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.filter.AbstractRequestLoggingFilter;
+import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 import java.util.Set;
 
@@ -19,6 +20,14 @@ class RequestLoggingFilterConfig {
     return filter;
   }
 
+  /**
+   * Springs {@link CommonsRequestLoggingFilter} is not sufficient for our needs, as we want to:
+   *
+   * <ol>
+   *   <li>Log the requests using log-level INFO instead of DEBUG
+   *   <li>Not log certain operation endpoints such as the actuator endpoints to due the noise
+   * </ol>
+   */
   static class MyCommonsRequestLoggingFilter extends AbstractRequestLoggingFilter {
 
     private static final Set<String> ENDPOINTS_NOT_TO_LOG =
