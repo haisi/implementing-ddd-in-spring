@@ -11,12 +11,18 @@ import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 class PostClientConfig {
 
   @Bean
-  PostClient postClient(RestClient.Builder restClientBuilder) {
+  PostClient postClient(
+      RestClient.Builder restClientBuilder, PostHttpClientProperties postHttpClientProperties) {
+    // Docs:
     // https://docs.spring.io/spring-boot/reference/io/rest-client.html#io.rest-client.restclient
+    var requestFactory = new HttpComponentsClientHttpRequestFactory();
+    requestFactory.setConnectTimeout(postHttpClientProperties.getConnectTimeout());
+    requestFactory.setConnectionRequestTimeout(postHttpClientProperties.getRequestTimeout());
+
     RestClient restClient =
         restClientBuilder
-            .baseUrl("https://jsonplaceholder.typicode.com")
-            .requestFactory(new HttpComponentsClientHttpRequestFactory())
+            .baseUrl(postHttpClientProperties.getBaseUrl().toString())
+            .requestFactory(requestFactory)
             .build();
     HttpServiceProxyFactory factory =
         HttpServiceProxyFactory.builderFor(RestClientAdapter.create(restClient)).build();

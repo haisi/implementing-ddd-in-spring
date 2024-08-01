@@ -6,6 +6,7 @@ import org.springframework.modulith.Modulith;
 
 @SpringBootApplication
 @Modulith
+@ConfigurationPropertiesScan
 public class ImplementingDddApplication {
 
   public static void main(String[] args) {

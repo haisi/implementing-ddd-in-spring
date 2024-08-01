@@ -24,3 +24,9 @@ management:
       percentiles-histogram:
         # Enable histogram buckets for Exemplars
         http.server.request: true
+my:
+  http:
+    client:
+      post:
+        base-url: "https://jsonplaceholder.typicode.com"
+        connection-timeout:
