@@ -30,7 +30,9 @@ logging:
       apache:
         hc:
           client5:
-            http: DEBUG
+            http:
+              # See: https://hc.apache.org/httpcomponents-client-5.3.x/logging.html
+              headers: DEBUG
 
 server:
   error:
