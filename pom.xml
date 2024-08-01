@@ -207,6 +207,7 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
             <exclusions>
+                <!-- Exclude JUnit 4 -->
                 <exclusion>
                     <groupId>org.junit.vintage</groupId>
                     <artifactId>junit-vintage-engine</artifactId>
@@ -397,6 +398,10 @@
                 <artifactId>asciidoctor-maven-plugin</artifactId>
                 <version>3.0.0</version>
                 <configuration>
+                    <!--
+                    To skip processing the AsciiDoc files, run: mvn -DskipDocs
+                    -->
+                    <skip>${skipDocs}</skip>
                     <doctype>book</doctype>
                     <attributes>
                         <docinfo>shared</docinfo>
