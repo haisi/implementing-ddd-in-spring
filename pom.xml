@@ -152,6 +152,11 @@
             <version>${jmolecules-integrations.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.httpcomponents.client5</groupId>
+            <artifactId>httpclient5</artifactId>
+        </dependency>
+
         <!-- Metrics -->
         <!-- Without this dependency actuator does not provide a /actuator/prometheus endpoint. -->
         <dependency>
