@@ -47,7 +47,6 @@ class JpaStatementRepository implements StatementRepository {
 
 interface StatementIdProjection {
   String getId();
-
 }
 
 interface SpringDataBookRepository extends JpaRepository<Statement, Statement.StatementId> {

@@ -1,5 +1,6 @@
 package li.selman.ddd;
 
+import com.tngtech.archunit.base.DescribedPredicate;
 import com.tngtech.archunit.core.domain.JavaClass;
 import com.tngtech.archunit.core.domain.SourceCodeLocation;
 import com.tngtech.archunit.core.importer.ImportOption;
@@ -22,6 +23,15 @@ import org.jmolecules.ddd.types.Repository;
     importOptions = ImportOption.DoNotIncludeJars.class)
 class TestTests {
 
+  static final PatternPredicate MAVEN_TEST_PATTERN =
+      new PatternPredicate(".*/target/test-classes/.*");
+  static final PatternPredicate GRADLE_TEST_PATTERN =
+      new PatternPredicate(".*/build/classes/([^/]+/)?test/.*");
+  static final PatternPredicate INTELLIJ_TEST_PATTERN = new PatternPredicate(".*/out/test/.*");
+  static final Predicate<JavaClass> TEST_LOCATION =
+      MAVEN_TEST_PATTERN.or(GRADLE_TEST_PATTERN).or(INTELLIJ_TEST_PATTERN);
+  static final Predicate<JavaClass> NO_TEST_LOCATION = TEST_LOCATION.negate();
+
   @ArchTest
   private final ArchRule aggregatesHaveTestFixtures =
       ArchRuleDefinition.classes()
@@ -39,6 +49,14 @@ class TestTests {
       ArchRuleDefinition.classes()
           .that()
           .areAssignableTo(Repository.class)
+          .and(
+              DescribedPredicate.not(
+                  new DescribedPredicate<>("") {
+                    @Override
+                    public boolean test(JavaClass javaClass) {
+                      return TEST_LOCATION.test(javaClass);
+                    }
+                  }))
           .should(haveInMemoryImplementation());
 
   private AggregateHasTestFixture haveTestFixture() {
@@ -134,15 +152,6 @@ class TestTests {
     }
     return true;
   }
-
-  static final PatternPredicate MAVEN_TEST_PATTERN =
-      new PatternPredicate(".*/target/test-classes/.*");
-  static final PatternPredicate GRADLE_TEST_PATTERN =
-      new PatternPredicate(".*/build/classes/([^/]+/)?test/.*");
-  static final PatternPredicate INTELLIJ_TEST_PATTERN = new PatternPredicate(".*/out/test/.*");
-  static final Predicate<JavaClass> TEST_LOCATION =
-      MAVEN_TEST_PATTERN.or(GRADLE_TEST_PATTERN).or(INTELLIJ_TEST_PATTERN);
-  static final Predicate<JavaClass> NO_TEST_LOCATION = TEST_LOCATION.negate();
 
   private static class PatternPredicate implements Predicate<JavaClass> {
     private final Pattern pattern;

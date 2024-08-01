@@ -1,11 +1,10 @@
 package li.selman.ddd.rest;
 
-import java.net.URI;
-import java.time.Instant;
-
 import io.micrometer.tracing.Span;
 import io.micrometer.tracing.Tracer;
 import jakarta.servlet.http.HttpServletRequest;
+import java.net.URI;
+import java.time.Instant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.*;
@@ -47,13 +46,13 @@ class RestExceptionHandler extends ResponseEntityExceptionHandler {
    */
   @Override
   protected ResponseEntity<Object> handleExceptionInternal(
-          Exception ex,
-          @Nullable Object body,
-          HttpHeaders headers,
-          HttpStatusCode statusCode,
-          WebRequest request) {
+      Exception ex,
+      @Nullable Object body,
+      HttpHeaders headers,
+      HttpStatusCode statusCode,
+      WebRequest request) {
     ResponseEntity<Object> objectResponseEntity =
-            super.handleExceptionInternal(ex, body, headers, statusCode, request);
+        super.handleExceptionInternal(ex, body, headers, statusCode, request);
     if (objectResponseEntity != null && objectResponseEntity.hasBody()) {
       if (objectResponseEntity.getBody() instanceof ProblemDetail) {
         addAdditionalDetails((ProblemDetail) objectResponseEntity.getBody());

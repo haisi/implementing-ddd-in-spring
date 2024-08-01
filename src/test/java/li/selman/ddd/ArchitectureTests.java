@@ -28,7 +28,8 @@ class ArchitectureTests {
   /**
    * Verifying application module structure
    *
-   * @see <a href="https://docs.spring.io/spring-modulith/reference/verification.html">Reference documentation on verification</a>
+   * @see <a href="https://docs.spring.io/spring-modulith/reference/verification.html">Reference
+   *     documentation on verification</a>
    */
   ApplicationModules modules = ApplicationModules.of(ImplementingDddApplication.class);
 
