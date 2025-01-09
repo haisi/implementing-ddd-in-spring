@@ -354,17 +354,18 @@
             </plugin>
             <plugin>
                 <!--
-                - Code formatter verifying and applying the google-java-format.
+                - Code formatter verifying and applying the palantir-java-format.
                 - Runs as part of the verify phase.
-                - Apart from fmt:check, the plugin can also auto format the code using 'mvn fmt:format'
+                - Apart from spotless:check, the plugin can also auto format the code using 'mvn spotless:apply'
                 - Install the IntelliJ plugin and configure your IntelliJ JRE Config
-                https://github.com/google/google-java-format/blob/master/README.md#intellij-android-studio-and-other-jetbrains-ides
+                https://plugins.jetbrains.com/plugin/13180-palantir-java-format
+                - IJ > Settings > "palantir java format settings" > enable
 
-                See for more infos: https://github.com/spotify/fmt-maven-plugin
+                See for more infos: https://github.com/palantir/palantir-java-format
                 -->
-                <groupId>com.spotify.fmt</groupId>
-                <artifactId>fmt-maven-plugin</artifactId>
-                <version>2.23</version>
+                <groupId>com.diffplug.spotless</groupId>
+                <artifactId>spotless-maven-plugin</artifactId>
+                <version>2.43.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -372,6 +373,14 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <!-- define a language-specific format -->
+                    <java>
+                        <palantirJavaFormat>
+                            <style>PALANTIR</style>
+                        </palantirJavaFormat>
+                    </java>
+                </configuration>
             </plugin>
             <plugin>
                 <!--

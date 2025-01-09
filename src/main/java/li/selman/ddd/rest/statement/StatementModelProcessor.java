@@ -6,10 +6,9 @@ import org.springframework.hateoas.server.RepresentationModelProcessor;
 import org.springframework.stereotype.Component;
 
 @Component
-public class StatementModelProcessor
-    implements RepresentationModelProcessor<EntityModel<Statement>> {
-  @Override
-  public EntityModel<Statement> process(EntityModel<Statement> model) {
-    return model;
-  }
+public class StatementModelProcessor implements RepresentationModelProcessor<EntityModel<Statement>> {
+    @Override
+    public EntityModel<Statement> process(EntityModel<Statement> model) {
+        return model;
+    }
 }

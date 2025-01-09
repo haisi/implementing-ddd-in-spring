@@ -11,21 +11,21 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 class WebConfig implements WebMvcConfigurer {
 
-  private final List<Printer<?>> printers;
-  private final List<GenericConverter> converters;
+    private final List<Printer<?>> printers;
+    private final List<GenericConverter> converters;
 
-  WebConfig(List<Printer<?>> printers, List<GenericConverter> converters) {
-    this.printers = printers;
-    this.converters = converters;
-  }
+    WebConfig(List<Printer<?>> printers, List<GenericConverter> converters) {
+        this.printers = printers;
+        this.converters = converters;
+    }
 
-  @Override
-  public void addFormatters(FormatterRegistry registry) {
-    DateTimeFormatterRegistrar registrar = new DateTimeFormatterRegistrar();
-    registrar.setUseIsoFormat(true);
-    registrar.registerFormatters(registry);
+    @Override
+    public void addFormatters(FormatterRegistry registry) {
+        DateTimeFormatterRegistrar registrar = new DateTimeFormatterRegistrar();
+        registrar.setUseIsoFormat(true);
+        registrar.registerFormatters(registry);
 
-    printers.forEach(registry::addPrinter);
-    converters.forEach(registry::addConverter);
-  }
+        printers.forEach(registry::addPrinter);
+        converters.forEach(registry::addConverter);
+    }
 }

@@ -5,8 +5,8 @@ import org.junit.jupiter.api.Test;
 
 class StatementTest {
 
-  @Test
-  public void equalsContract() {
-    EqualsTester.testJpaEquals(Statement.class);
-  }
+    @Test
+    public void equalsContract() {
+        EqualsTester.testJpaEquals(Statement.class);
+    }
 }

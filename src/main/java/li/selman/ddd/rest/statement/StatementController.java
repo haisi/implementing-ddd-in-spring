@@ -15,35 +15,33 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 class StatementController {
 
-  private static final Logger log = LoggerFactory.getLogger(StatementController.class);
+    private static final Logger log = LoggerFactory.getLogger(StatementController.class);
 
-  private final StatementRepository statementsRepo;
-  private final PostClient postClient;
+    private final StatementRepository statementsRepo;
+    private final PostClient postClient;
 
-  StatementController(StatementRepository statementRepository, PostClient postClient) {
-    this.statementsRepo = statementRepository;
-    this.postClient = postClient;
-  }
+    StatementController(StatementRepository statementRepository, PostClient postClient) {
+        this.statementsRepo = statementRepository;
+        this.postClient = postClient;
+    }
 
-  @GetMapping("/statement/{statementId}")
-  HttpEntity<EntityModel<Statement>> react(@PathVariable Statement.StatementId statementId) {
-    Statement statement =
-        statementsRepo
-            .findById(statementId)
-            .orElseThrow(() -> new ResourceNotFoundException("Statement not found"));
-    return ResponseEntity.ok(EntityModel.of(statement));
-  }
+    @GetMapping("/statement/{statementId}")
+    HttpEntity<EntityModel<Statement>> react(@PathVariable Statement.StatementId statementId) {
+        Statement statement = statementsRepo
+                .findById(statementId)
+                .orElseThrow(() -> new ResourceNotFoundException("Statement not found"));
+        return ResponseEntity.ok(EntityModel.of(statement));
+    }
 
-  @PostMapping("/{statementId}/react")
-  HttpEntity<?> react(
-      @PathVariable Statement.StatementId statementId, @RequestParam String reaction) {
+    @PostMapping("/{statementId}/react")
+    HttpEntity<?> react(@PathVariable Statement.StatementId statementId, @RequestParam String reaction) {
 
-    log.info("Fooo {}", reaction);
+        log.info("Fooo {}", reaction);
 
-    //        statementsRepo.findById(statementId).orElseThrow(() -> new
-    // ResponseStatusException(HttpStatusCode.valueOf(404)));
-    Post post = postClient.findById(Integer.valueOf(reaction));
+        //        statementsRepo.findById(statementId).orElseThrow(() -> new
+        // ResponseStatusException(HttpStatusCode.valueOf(404)));
+        Post post = postClient.findById(Integer.valueOf(reaction));
 
-    return ResponseEntity.ok(post);
-  }
+        return ResponseEntity.ok(post);
+    }
 }

@@ -8,11 +8,11 @@ import li.selman.ddd.statement.Statement;
 @SuppressWarnings("NullAway.Init")
 public class CustomizedSavedImpl implements CustomizedSave<Statement> {
 
-  @SuppressWarnings("unused")
-  private @PersistenceContext EntityManager entityManager;
+    @SuppressWarnings("unused")
+    private @PersistenceContext EntityManager entityManager;
 
-  @Override
-  public <S extends Statement> S save(S entity) {
-    return entity;
-  }
+    @Override
+    public <S extends Statement> S save(S entity) {
+        return entity;
+    }
 }

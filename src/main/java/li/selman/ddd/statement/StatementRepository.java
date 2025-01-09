@@ -7,9 +7,9 @@ import li.selman.ddd.statement.Statement.StatementId;
 import org.jmolecules.ddd.types.Repository;
 
 public interface StatementRepository
-    extends Repository<Statement, StatementId>, NextIdentifier, CustomizedSave<Statement> {
+        extends Repository<Statement, StatementId>, NextIdentifier, CustomizedSave<Statement> {
 
-  Optional<Statement> findById(StatementId id);
+    Optional<Statement> findById(StatementId id);
 
-  List<String> findByState(State state);
+    List<String> findByState(State state);
 }

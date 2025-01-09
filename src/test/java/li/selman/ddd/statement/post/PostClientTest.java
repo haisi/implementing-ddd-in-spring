@@ -22,42 +22,45 @@ import org.springframework.web.client.support.RestTemplateAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
-@RestClientTest(
-    value = PostClient.class,
-    properties = "logging.level.org.apache.hc.client5.http.wire=DEBUG")
+@RestClientTest(value = PostClient.class, properties = "logging.level.org.apache.hc.client5.http.wire=DEBUG")
 class PostClientTest {
 
-  private static final String SERVICE_URL = "https://jsonplaceholder.typicode.com";
+    private static final String SERVICE_URL = "https://jsonplaceholder.typicode.com";
 
-  @Autowired private RestTemplateBuilder restTemplateBuilder;
-  private PostClient client;
-  @Autowired private MockRestServiceServer server;
-  @Autowired private ObjectMapper objectMapper;
+    @Autowired
+    private RestTemplateBuilder restTemplateBuilder;
 
-  @Nested
-  class FindById {
+    private PostClient client;
 
-    @BeforeEach
-    public void setUp() {
-      if (client == null) {
-        // Testing interface based clients is currently cumbersome
-        // https://github.com/spring-projects/spring-boot/issues/31337
-        // https://github.com/spring-projects/spring-boot/issues/39521
-        RestTemplate restTemplate = restTemplateBuilder.build();
-        restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(SERVICE_URL));
-        client =
-            HttpServiceProxyFactory.builderFor(RestTemplateAdapter.create(restTemplate))
-                .build()
-                .createClient(PostClient.class);
-        server = MockRestServiceServer.bindTo(restTemplate).build();
-      }
-    }
+    @Autowired
+    private MockRestServiceServer server;
 
-    @Test
-    void shouldFindById() {
-      @Language("JSON")
-      String postJson =
-          """
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Nested
+    class FindById {
+
+        @BeforeEach
+        public void setUp() {
+            if (client == null) {
+                // Testing interface based clients is currently cumbersome
+                // https://github.com/spring-projects/spring-boot/issues/31337
+                // https://github.com/spring-projects/spring-boot/issues/39521
+                RestTemplate restTemplate = restTemplateBuilder.build();
+                restTemplate.setUriTemplateHandler(new DefaultUriBuilderFactory(SERVICE_URL));
+                client = HttpServiceProxyFactory.builderFor(RestTemplateAdapter.create(restTemplate))
+                        .build()
+                        .createClient(PostClient.class);
+                server = MockRestServiceServer.bindTo(restTemplate).build();
+            }
+        }
+
+        @Test
+        void shouldFindById() {
+            @Language("JSON")
+            String postJson =
+                    """
                       {
                         "userId": 42,
                         "id": 5,
@@ -66,34 +69,31 @@ class PostClientTest {
                       }
                       """;
 
-      server
-          .expect(requestTo("https://jsonplaceholder.typicode.com/posts/1"))
-          .andRespond(withSuccess(postJson, APPLICATION_JSON));
+            server.expect(requestTo("https://jsonplaceholder.typicode.com/posts/1"))
+                    .andRespond(withSuccess(postJson, APPLICATION_JSON));
 
-      Post post = client.findById(1);
+            Post post = client.findById(1);
 
-      assertThat(post.userId()).isEqualTo(42);
-      assertThat(post.id()).isEqualTo(5);
-      assertThat(post.title()).isEqualTo("qui est esse");
-      assertThat(post.body())
-          .isEqualTo(
-              "est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque");
+            assertThat(post.userId()).isEqualTo(42);
+            assertThat(post.id()).isEqualTo(5);
+            assertThat(post.title()).isEqualTo("qui est esse");
+            assertThat(post.body())
+                    .isEqualTo("est rerum tempore vitae\nsequi sint nihil reprehenderit dolor beatae ea dolores neque");
+        }
+
+        @Test
+        void shouldNotFindById() {
+            @Language("JSON")
+            String emptyResponse = "{}";
+
+            server.expect(requestTo("https://jsonplaceholder.typicode.com/posts/999"))
+                    .andRespond(withResourceNotFound().body(emptyResponse).contentType(APPLICATION_JSON));
+
+            var ex = assertThrows(HttpClientErrorException.class, () -> client.findById(999));
+
+            assertThat(ex.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(404));
+            assertThat(ex.getResponseBodyAsString()).isEqualTo("{}");
+            assertThat(ex.getMessage()).startsWith("404 Not Found");
+        }
     }
-
-    @Test
-    void shouldNotFindById() {
-      @Language("JSON")
-      String emptyResponse = "{}";
-
-      server
-          .expect(requestTo("https://jsonplaceholder.typicode.com/posts/999"))
-          .andRespond(withResourceNotFound().body(emptyResponse).contentType(APPLICATION_JSON));
-
-      var ex = assertThrows(HttpClientErrorException.class, () -> client.findById(999));
-
-      assertThat(ex.getStatusCode()).isEqualTo(HttpStatusCode.valueOf(404));
-      assertThat(ex.getResponseBodyAsString()).isEqualTo("{}");
-      assertThat(ex.getMessage()).startsWith("404 Not Found");
-    }
-  }
 }

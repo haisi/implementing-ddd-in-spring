@@ -14,51 +14,45 @@ import org.springframework.lang.NonNullApi;
 import org.springframework.modulith.core.ApplicationModules;
 import org.springframework.modulith.docs.Documenter;
 
-@AnalyzeClasses(
-    packagesOf = ImplementingDddApplication.class,
-    importOptions = ImportOption.DoNotIncludeTests.class)
+@AnalyzeClasses(packagesOf = ImplementingDddApplication.class, importOptions = ImportOption.DoNotIncludeTests.class)
 class ArchitectureTests {
 
-  private static final String ROOT_PACKAGE = "li.selman.ddd";
+    private static final String ROOT_PACKAGE = "li.selman.ddd";
 
-  @ArchTest ArchRule dddRules = JMoleculesDddRules.all();
+    @ArchTest
+    ArchRule dddRules = JMoleculesDddRules.all();
 
-  @ArchTest ArchRule onionRules = JMoleculesArchitectureRules.ensureOnionSimple();
+    @ArchTest
+    ArchRule onionRules = JMoleculesArchitectureRules.ensureOnionSimple();
 
-  /**
-   * Verifying application module structure
-   *
-   * @see <a href="https://docs.spring.io/spring-modulith/reference/verification.html">Reference
-   *     documentation on verification</a>
-   */
-  ApplicationModules modules = ApplicationModules.of(ImplementingDddApplication.class);
+    /**
+     * Verifying application module structure
+     *
+     * @see <a href="https://docs.spring.io/spring-modulith/reference/verification.html">Reference
+     *     documentation on verification</a>
+     */
+    ApplicationModules modules = ApplicationModules.of(ImplementingDddApplication.class);
 
-  @Test
-  void writeDocumentationSnippets() {
-    modules.forEach(System.out::println);
+    @Test
+    void writeDocumentationSnippets() {
+        modules.forEach(System.out::println);
 
-    new Documenter(modules)
-        .writeModuleCanvases()
-        .writeModulesAsPlantUml(
-            Documenter.DiagramOptions.defaults()
-                .withStyle(Documenter.DiagramOptions.DiagramStyle.C4))
-        .writeIndividualModulesAsPlantUml();
+        new Documenter(modules)
+                .writeModuleCanvases()
+                .writeModulesAsPlantUml(
+                        Documenter.DiagramOptions.defaults().withStyle(Documenter.DiagramOptions.DiagramStyle.C4))
+                .writeIndividualModulesAsPlantUml();
 
-    modules.verify();
-  }
+        modules.verify();
+    }
 
-  /** Enforce that all packages contain a `package-info.java` annotated with `@NonNullApi` */
-  @ArchTest
-  void packagesShouldBeAnnotated(JavaClasses classes) {
-    var rootPackage = classes.getPackage(ROOT_PACKAGE);
-    var violations =
-        rootPackage.getSubpackagesInTree().stream()
-            .filter(pkg -> !pkg.isAnnotatedWith(NonNullApi.class))
-            .map(
-                pkg ->
-                    pkg.getDescription()
-                        + " is not annotated with @"
-                        + NonNullApi.class.getSimpleName());
-    assertThat(violations).as("violations").isEmpty();
-  }
+    /** Enforce that all packages contain a `package-info.java` annotated with `@NonNullApi` */
+    @ArchTest
+    void packagesShouldBeAnnotated(JavaClasses classes) {
+        var rootPackage = classes.getPackage(ROOT_PACKAGE);
+        var violations = rootPackage.getSubpackagesInTree().stream()
+                .filter(pkg -> !pkg.isAnnotatedWith(NonNullApi.class))
+                .map(pkg -> pkg.getDescription() + " is not annotated with @" + NonNullApi.class.getSimpleName());
+        assertThat(violations).as("violations").isEmpty();
+    }
 }

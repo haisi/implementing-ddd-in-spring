@@ -26,59 +26,69 @@ import org.springframework.restdocs.payload.JsonFieldType;
 @Import(StatementModelProcessor.class)
 class StatementControllerIntegrationTest extends AbstractWebIntegrationTest {
 
-  @TestConfiguration
-  static class TestContextConfiguration {
-    @Bean
-    InMemoryStatementRepository statementRepository() {
-      return new InMemoryStatementRepository();
-    }
-  }
-
-  @Autowired private InMemoryStatementRepository statementRepository;
-
-  @Nested
-  @Import(TestContextConfiguration.class)
-  class GetAllStatements {
-    @Test
-    @DisplayName("GET /statement/{existing-resource} => 200")
-    void resourceFound() throws Exception {
-      // given
-      Statement statement = StatementFixture.aStatement().build();
-      statementRepository.put(statement.getId(), statement);
-
-      mvc.perform(get("/statement/" + statement.getId()))
-          .andExpect(status().isOk())
-          .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
-          .andExpect(jsonPath("$.id", is(statement.getId().toBusinessId())));
+    @TestConfiguration
+    static class TestContextConfiguration {
+        @Bean
+        InMemoryStatementRepository statementRepository() {
+            return new InMemoryStatementRepository();
+        }
     }
 
-    @Test
-    @DisplayName("GET /statement/{missing-resource} => 404")
-    void resourceNotFound() throws Exception {
-      // given - no statements
-      assertThat(statementRepository).isEmpty();
+    @Autowired
+    private InMemoryStatementRepository statementRepository;
 
-      // when - any statement is queried
-      mvc.perform(get("/statement/" + StatementFixture.STATEMENT_ID))
-          // then - 404
-          .andExpect(status().isNotFound())
-          .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
-          .andExpect(jsonPath("$.status", is(404)))
-          .andDo(
-              document(
-                  "statement",
-                  responseFields( // todo extract common Problem Details into List
-                      fieldWithPath("status").type(JsonFieldType.NUMBER).description("HTTP Verb"),
-                      fieldWithPath("type").type(JsonFieldType.STRING).description(""),
-                      fieldWithPath("title").type(JsonFieldType.STRING).description(""),
-                      fieldWithPath("detail").type(JsonFieldType.STRING).description(""),
-                      fieldWithPath("instance")
-                          .type(JsonFieldType.STRING)
-                          .description("The called endpoint"),
-                      fieldWithPath("errorCode")
-                          .type(JsonFieldType.STRING)
-                          .description(""), // TODO why string?
-                      fieldWithPath("timestamp").type(JsonFieldType.STRING).description(""))));
+    @Nested
+    @Import(TestContextConfiguration.class)
+    class GetAllStatements {
+        @Test
+        @DisplayName("GET /statement/{existing-resource} => 200")
+        void resourceFound() throws Exception {
+            // given
+            Statement statement = StatementFixture.aStatement().build();
+            statementRepository.put(statement.getId(), statement);
+
+            mvc.perform(get("/statement/" + statement.getId()))
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
+                    .andExpect(jsonPath("$.id", is(statement.getId().toBusinessId())));
+        }
+
+        @Test
+        @DisplayName("GET /statement/{missing-resource} => 404")
+        void resourceNotFound() throws Exception {
+            // given - no statements
+            assertThat(statementRepository).isEmpty();
+
+            // when - any statement is queried
+            mvc.perform(get("/statement/" + StatementFixture.STATEMENT_ID))
+                    // then - 404
+                    .andExpect(status().isNotFound())
+                    .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
+                    .andExpect(jsonPath("$.status", is(404)))
+                    .andDo(document(
+                            "statement",
+                            responseFields( // todo extract common Problem Details into List
+                                    fieldWithPath("status")
+                                            .type(JsonFieldType.NUMBER)
+                                            .description("HTTP Verb"),
+                                    fieldWithPath("type")
+                                            .type(JsonFieldType.STRING)
+                                            .description(""),
+                                    fieldWithPath("title")
+                                            .type(JsonFieldType.STRING)
+                                            .description(""),
+                                    fieldWithPath("detail")
+                                            .type(JsonFieldType.STRING)
+                                            .description(""),
+                                    fieldWithPath("instance")
+                                            .type(JsonFieldType.STRING)
+                                            .description("The called endpoint"),
+                                    fieldWithPath("errorCode")
+                                            .type(JsonFieldType.STRING)
+                                            .description(""), // TODO why string?
+                                    fieldWithPath("timestamp")
+                                            .type(JsonFieldType.STRING)
+                                            .description(""))));
+        }
     }
-  }
 }

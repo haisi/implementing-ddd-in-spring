@@ -32,7 +32,7 @@ logging:
           client5:
             http:
               # See: https://hc.apache.org/httpcomponents-client-5.3.x/logging.html
-              headers: DEBUG
+              headers: INFO
 
 server:
   error:

@@ -30,72 +30,74 @@ import org.springframework.web.context.WebApplicationContext;
 @ExtendWith({RestDocumentationExtension.class, SpringExtension.class})
 public abstract class AbstractWebIntegrationTest {
 
-  @Autowired WebApplicationContext context;
-  @Autowired LinkDiscoverers links;
+    @Autowired
+    WebApplicationContext context;
 
-  protected MockMvc mvc;
+    @Autowired
+    LinkDiscoverers links;
 
-  @BeforeEach
-  void setUp(RestDocumentationContextProvider restDocumentation) {
-    mvc =
-        MockMvcBuilders.webAppContextSetup(context)
-            .defaultRequest(get("/").locale(Locale.US))
-            .apply(documentationConfiguration(restDocumentation))
-            .alwaysDo(print())
-            .build();
-  }
+    protected MockMvc mvc;
 
-  /**
-   * Creates a {@link ResultMatcher} that checks for the presence of a link with the given rel.
-   *
-   * @param rel
-   * @return
-   */
-  protected ResultMatcher linkWithRelIsPresent(LinkRelation rel) {
-    return new LinkWithRelMatcher(rel, true);
-  }
-
-  /**
-   * Creates a {@link ResultMatcher} that checks for the non-presence of a link with the given rel.
-   *
-   * @param rel
-   * @return
-   */
-  protected ResultMatcher linkWithRelIsNotPresent(LinkRelation rel) {
-    return new LinkWithRelMatcher(rel, false);
-  }
-
-  protected LinkDiscoverer getDiscovererFor(MockHttpServletResponse response) {
-    return links.getRequiredLinkDiscovererFor(Objects.requireNonNull(response.getContentType()));
-  }
-
-  private class LinkWithRelMatcher implements ResultMatcher {
-
-    private final LinkRelation rel;
-    private final boolean present;
-
-    private LinkWithRelMatcher(LinkRelation rel, boolean present) {
-      this.rel = rel;
-      this.present = present;
+    @BeforeEach
+    void setUp(RestDocumentationContextProvider restDocumentation) {
+        mvc = MockMvcBuilders.webAppContextSetup(context)
+                .defaultRequest(get("/").locale(Locale.US))
+                .apply(documentationConfiguration(restDocumentation))
+                .alwaysDo(print())
+                .build();
     }
 
-    @Override
-    public void match(MvcResult result) throws Exception {
-
-      MockHttpServletResponse response = result.getResponse();
-      String content = response.getContentAsString();
-      LinkDiscoverer discoverer = links.getRequiredLinkDiscovererFor(response.getContentType());
-
-      Optional<Link> link = discoverer.findLinkWithRel(rel, content);
-
-      assertThat(link).matches(it -> it.isPresent() == present, getMessage(link));
+    /**
+     * Creates a {@link ResultMatcher} that checks for the presence of a link with the given rel.
+     *
+     * @param rel
+     * @return
+     */
+    protected ResultMatcher linkWithRelIsPresent(LinkRelation rel) {
+        return new LinkWithRelMatcher(rel, true);
     }
 
-    private String getMessage(Optional<Link> link) {
-
-      return String.format(
-          "Expected to %s link with relation %s, but found %s!",
-          present ? "find" : "not find", rel, present ? link.get() : "none");
+    /**
+     * Creates a {@link ResultMatcher} that checks for the non-presence of a link with the given rel.
+     *
+     * @param rel
+     * @return
+     */
+    protected ResultMatcher linkWithRelIsNotPresent(LinkRelation rel) {
+        return new LinkWithRelMatcher(rel, false);
     }
-  }
+
+    protected LinkDiscoverer getDiscovererFor(MockHttpServletResponse response) {
+        return links.getRequiredLinkDiscovererFor(Objects.requireNonNull(response.getContentType()));
+    }
+
+    private class LinkWithRelMatcher implements ResultMatcher {
+
+        private final LinkRelation rel;
+        private final boolean present;
+
+        private LinkWithRelMatcher(LinkRelation rel, boolean present) {
+            this.rel = rel;
+            this.present = present;
+        }
+
+        @Override
+        public void match(MvcResult result) throws Exception {
+
+            MockHttpServletResponse response = result.getResponse();
+            String content = response.getContentAsString();
+            LinkDiscoverer discoverer = links.getRequiredLinkDiscovererFor(response.getContentType());
+
+            Optional<Link> link = discoverer.findLinkWithRel(rel, content);
+
+            assertThat(link).matches(it -> it.isPresent() == present, getMessage(link));
+        }
+
+        private String getMessage(Optional<Link> link) {
+
+            return String.format(
+                    "Expected to %s link with relation %s, but found %s!",
+                    present ? "find" : "not find", rel, present ? link.get() : "none");
+        }
+    }
 }

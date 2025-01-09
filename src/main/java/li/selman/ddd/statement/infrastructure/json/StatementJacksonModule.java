@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 class StatementJacksonModule extends SimpleModule {
 
-  public StatementJacksonModule() {
-    addSerializer(Statement.StatementId.class, new StatementIdSerializer());
-    addValueInstantiator(Statement.StatementId.class, new StatementIdInstantiator());
-  }
+    public StatementJacksonModule() {
+        addSerializer(Statement.StatementId.class, new StatementIdSerializer());
+        addValueInstantiator(Statement.StatementId.class, new StatementIdInstantiator());
+    }
 }

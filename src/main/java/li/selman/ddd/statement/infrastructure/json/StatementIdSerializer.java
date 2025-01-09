@@ -9,20 +9,18 @@ import org.springframework.lang.Nullable;
 
 class StatementIdSerializer extends StdSerializer<StatementId> {
 
-  protected StatementIdSerializer() {
-    super(StatementId.class);
-  }
-
-  @Override
-  public void serialize(
-      @Nullable StatementId statementId,
-      JsonGenerator jsonGenerator,
-      SerializerProvider serializerProvider)
-      throws IOException {
-    if (statementId != null) {
-      jsonGenerator.writeString(statementId.toBusinessId());
-    } else {
-      jsonGenerator.writeNull();
+    protected StatementIdSerializer() {
+        super(StatementId.class);
     }
-  }
+
+    @Override
+    public void serialize(
+            @Nullable StatementId statementId, JsonGenerator jsonGenerator, SerializerProvider serializerProvider)
+            throws IOException {
+        if (statementId != null) {
+            jsonGenerator.writeString(statementId.toBusinessId());
+        } else {
+            jsonGenerator.writeNull();
+        }
+    }
 }

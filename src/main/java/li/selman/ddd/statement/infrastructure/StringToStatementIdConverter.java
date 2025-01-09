@@ -10,26 +10,25 @@ import org.springframework.stereotype.Component;
 /** Enables passing StatementId to Spring MVC controllers. */
 @Component
 class StringToStatementIdConverter implements ConditionalGenericConverter {
-  @Override
-  public boolean matches(TypeDescriptor sourceType, TypeDescriptor targetType) {
-    return (sourceType.getType().equals(String.class)
-        && targetType.getType().equals(Statement.StatementId.class));
-  }
-
-  @Override
-  public Set<ConvertiblePair> getConvertibleTypes() {
-    return Set.of(new ConvertiblePair(String.class, Statement.StatementId.class));
-  }
-
-  @Override
-  public @Nullable Object convert(
-      @Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
-    if (source == null) {
-      return null;
+    @Override
+    public boolean matches(TypeDescriptor sourceType, TypeDescriptor targetType) {
+        return (sourceType.getType().equals(String.class)
+                && targetType.getType().equals(Statement.StatementId.class));
     }
 
-    String rawStatementId = (String) source;
+    @Override
+    public Set<ConvertiblePair> getConvertibleTypes() {
+        return Set.of(new ConvertiblePair(String.class, Statement.StatementId.class));
+    }
 
-    return Statement.StatementId.fromString(rawStatementId);
-  }
+    @Override
+    public @Nullable Object convert(@Nullable Object source, TypeDescriptor sourceType, TypeDescriptor targetType) {
+        if (source == null) {
+            return null;
+        }
+
+        String rawStatementId = (String) source;
+
+        return Statement.StatementId.fromString(rawStatementId);
+    }
 }
