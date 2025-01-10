@@ -30,12 +30,14 @@ class PostClientTest {
     @Autowired
     private RestTemplateBuilder restTemplateBuilder;
 
+    @SuppressWarnings("NullAway.Init")
     private PostClient client;
 
     @Autowired
     private MockRestServiceServer server;
 
     @Autowired
+    @SuppressWarnings("UnusedVariable")
     private ObjectMapper objectMapper;
 
     @Nested

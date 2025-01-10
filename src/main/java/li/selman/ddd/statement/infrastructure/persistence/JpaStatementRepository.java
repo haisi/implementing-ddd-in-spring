@@ -1,5 +1,6 @@
 package li.selman.ddd.statement.infrastructure.persistence;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import li.selman.ddd.common.StaleStateException;
@@ -41,7 +42,7 @@ class JpaStatementRepository implements StatementRepository {
 
     @Override
     public Statement.StatementId nextIdentifier() {
-        return null;
+        return new Statement.StatementId(LocalDate.of(2024, 1, 1), Statement.Source.YOUTUBE, 1);
     }
 }
 

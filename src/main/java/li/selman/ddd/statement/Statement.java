@@ -22,7 +22,6 @@ import org.jmolecules.jpa.JMoleculesJpa;
 import org.slf4j.Logger;
 import org.springframework.data.domain.AbstractAggregateRoot;
 
-/** */
 @SuppressWarnings("NullAway.Init")
 @Entity
 public class Statement extends AbstractAggregateRoot<Statement>
@@ -157,6 +156,7 @@ public class Statement extends AbstractAggregateRoot<Statement>
         TO_IN_REVIEW(Transition.from(OPEN, IN_REVIEW).to(IN_REVIEW)),
         TO_CLOSED(Transition.from(OPEN, IN_REVIEW, CLOSED).to(CLOSED));
 
+        @SuppressWarnings("ImmutableEnumChecker")
         private final Transition<State> transition;
 
         StateFsm(Transition<State> transition) {
@@ -170,10 +170,10 @@ public class Statement extends AbstractAggregateRoot<Statement>
 
         @Override
         public State fromState(State current) {
-            return this.transition.evaluateTransition(
+            return Objects.requireNonNull(this.transition.evaluateTransition(
                     current,
                     () -> new IllegalArgumentException("State transition from '%s' to '%s' in invalid"
-                            .formatted(current, transition.getFinalState())));
+                            .formatted(current, transition.getFinalState()))));
         }
     }
 
@@ -202,6 +202,7 @@ public class Statement extends AbstractAggregateRoot<Statement>
         return "Statement{" + "authorId=" + authorId + ", state=" + state + ", version=" + version + ", id=" + id + '}';
     }
 
+    @SuppressWarnings("EqualsGetClass")
     @Override
     public final boolean equals(Object o) {
         if (this == o) return true;

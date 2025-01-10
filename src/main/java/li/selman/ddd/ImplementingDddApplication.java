@@ -1,10 +1,9 @@
 package li.selman.ddd;
 
+import com.google.errorprone.annotations.Var;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
@@ -29,8 +28,6 @@ import org.springframework.web.client.UnknownHttpStatusCodeException;
 @ConfigurationPropertiesScan
 public class ImplementingDddApplication {
 
-    private static final Logger log = LoggerFactory.getLogger(ImplementingDddApplication.class);
-
     public static void main(String[] args) {
         SpringApplication.run(ImplementingDddApplication.class, args);
     }
@@ -50,6 +47,7 @@ public class ImplementingDddApplication {
 
                     // Only do, if we actually log it
                     byte[] body = getResponseBody(response);
+                    @SuppressWarnings("UnusedVariable")
                     Charset charset = getCharset(response);
 
                     HttpStatusCode statusCode = response.getStatusCode();
@@ -57,7 +55,8 @@ public class ImplementingDddApplication {
                     var message = "HTTP request '%s %s' failed with '%s %s'"
                             .formatted(httpMethod, uri, statusCode, statusText);
 
-                    String errorMessage = getErrorMessage(statusCode.value(), response.getStatusText(), body, charset);
+                    //                    String errorMessage = getErrorMessage(statusCode.value(),
+                    // response.getStatusText(), body, charset);
 
                     if (statusCode.is4xxClientError()) {
                         throw new HttpClientErrorException(
@@ -87,8 +86,9 @@ public class ImplementingDddApplication {
         return new byte[0];
     }
 
+    @SuppressWarnings("UnusedMethod")
     private String getErrorMessage(
-            int rawStatusCode, String statusText, @Nullable byte[] responseBody, @Nullable Charset charset) {
+            int rawStatusCode, String statusText, @Nullable byte[] responseBody, @Var @Nullable Charset charset) {
 
         String preface = rawStatusCode + " " + statusText + ": ";
 
@@ -98,7 +98,7 @@ public class ImplementingDddApplication {
 
         charset = (charset != null ? charset : StandardCharsets.UTF_8);
 
-        String bodyText = new String(responseBody, charset);
+        @Var String bodyText = new String(responseBody, charset);
         bodyText = LogFormatUtils.formatValue(bodyText, -1, true);
 
         return preface + bodyText;

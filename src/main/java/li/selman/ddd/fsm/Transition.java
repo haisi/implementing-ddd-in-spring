@@ -7,9 +7,15 @@ import java.util.function.Supplier;
 
 public class Transition<T extends Serializable> implements Serializable {
 
+    @SuppressWarnings("NullAway")
     private T currentState;
+
+    @SuppressWarnings("NullAway")
     private T finalState;
+
+    @SuppressWarnings("NullAway")
     private Collection<T> validFromStates;
+
     private Collection<T> ignoreFromStates = Set.of();
 
     public static <T extends Serializable> InitializedTransitionBuilder<T> initialState(T initialState) {

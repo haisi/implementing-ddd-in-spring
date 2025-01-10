@@ -28,6 +28,7 @@ class TestTests {
             MAVEN_TEST_PATTERN.or(GRADLE_TEST_PATTERN).or(INTELLIJ_TEST_PATTERN);
     static final Predicate<JavaClass> NO_TEST_LOCATION = TEST_LOCATION.negate();
 
+    @SuppressWarnings("UnusedVariable")
     @ArchTest
     private final ArchRule aggregatesHaveTestFixtures = ArchRuleDefinition.classes()
             .that()

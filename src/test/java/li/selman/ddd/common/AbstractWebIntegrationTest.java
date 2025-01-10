@@ -49,9 +49,6 @@ public abstract class AbstractWebIntegrationTest {
 
     /**
      * Creates a {@link ResultMatcher} that checks for the presence of a link with the given rel.
-     *
-     * @param rel
-     * @return
      */
     protected ResultMatcher linkWithRelIsPresent(LinkRelation rel) {
         return new LinkWithRelMatcher(rel, true);
@@ -59,9 +56,6 @@ public abstract class AbstractWebIntegrationTest {
 
     /**
      * Creates a {@link ResultMatcher} that checks for the non-presence of a link with the given rel.
-     *
-     * @param rel
-     * @return
      */
     protected ResultMatcher linkWithRelIsNotPresent(LinkRelation rel) {
         return new LinkWithRelMatcher(rel, false);

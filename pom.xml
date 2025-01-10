@@ -221,6 +221,21 @@
         <!--            <optional>true</optional>-->
         <!--        </dependency>-->
 
+        <dependency>
+            <!-- Provides annotations such as @Var to tell error-prone something is non-constant -->
+            <groupId>com.google.errorprone</groupId>
+            <artifactId>error_prone_annotations</artifactId>
+            <version>${error-prone-core.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <!-- Otherwise we get compile warnings -->
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs-annotations</artifactId>
+            <version>4.8.6</version>
+            <scope>compile</scope>
+        </dependency>
+
         <!-- =============================================================================================================== -->
         <!-- ============================================== Test Dependencies ============================================== -->
         <!-- =============================================================================================================== -->
@@ -323,9 +338,15 @@
                     <target>21</target>
                     <encoding>UTF-8</encoding>
                     <compilerArgs>
+                        <!-- Fail on all compile time WARNING -->
+                        <arg>-Xlint:all</arg>
+                        <arg>-Xlint:-serial</arg>
+                        <arg>-Xlint:-varargs</arg>
+                        <arg>-Werror</arg>
+
                         <arg>-XDcompilePolicy=simple</arg>
                         <arg>--should-stop=ifError=FLOW</arg>
-                        <arg>-Xplugin:ErrorProne -XepOpt:NullAway:AnnotatedPackages=li.selman.ddd</arg>
+                        <arg>-Xplugin:ErrorProne -Xep:Var:ERROR -Xep:StringSplitter:OFF -XepOpt:NullAway:AnnotatedPackages=li.selman.ddd</arg>
                     </compilerArgs>
                     <annotationProcessorPaths>
                         <!--
@@ -333,6 +354,10 @@
                             - Can be extended with custom or third-party bug patterns: https://error-prone.picnic.tech/
                         - Can automatically patch code not matching a patter
                             - Can be extended with custom or third-part patchers
+
+                        - Install IJ plugin: https://plugins.jetbrains.com/plugin/7349-error-prone-compiler
+                            - Configure Settings | Compiler | Java Compiler | Use compiler: Javac with error-prone
+                            - make sure Settings | Compiler | Use external build is NOT selected.
                         -->
                         <path>
                             <groupId>com.google.errorprone</groupId>

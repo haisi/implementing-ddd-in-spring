@@ -22,16 +22,16 @@ public class InMemoryStatementRepository extends HashMap<Statement.StatementId, 
 
     @Override
     public <S extends Statement> S save(S entity) {
-        return null;
+        return entity;
     }
 
     @Override
     public Statement.StatementId nextIdentifier() {
-        return null;
+        return StatementFixture.STATEMENT_ID;
     }
 
     @Override
     public <T extends AggregateRoot<T, ID>, ID extends Identifier> T deepCopy(T object) {
-        return null;
+        return object;
     }
 }
