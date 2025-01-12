@@ -318,6 +318,21 @@
         </dependency>
 
         <dependency>
+            <!-- https://github.com/origin-energy/java-snapshot-testing -->
+            <groupId>io.github.origin-energy</groupId>
+            <artifactId>java-snapshot-testing-junit5</artifactId>
+            <version>4.0.8</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <!-- https://github.com/origin-energy/java-snapshot-testing -->
+            <groupId>io.github.origin-energy</groupId>
+            <artifactId>java-snapshot-testing-plugin-jackson</artifactId>
+            <version>4.0.8</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
             <!--
             Used in Java unit tests to verify whether the contract for the equals and hashCode methods in a class is met.
             See for more: https://jqno.nl/equalsverifier/manual/
