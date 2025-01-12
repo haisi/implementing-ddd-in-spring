@@ -7,6 +7,9 @@ import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
+import com.tngtech.archunit.lang.CompositeArchRule;
+import de.rweisleder.archunit.spring.framework.SpringAsyncRules;
+import de.rweisleder.archunit.spring.framework.SpringCacheRules;
 import org.jmolecules.archunit.JMoleculesArchitectureRules;
 import org.jmolecules.archunit.JMoleculesDddRules;
 import org.junit.jupiter.api.Test;
@@ -24,6 +27,23 @@ class ArchitectureTests {
 
     @ArchTest
     ArchRule onionRules = JMoleculesArchitectureRules.ensureOnionSimple();
+
+    /**
+     * Spring Cacheable rules
+     */
+    ArchRule springCacheableRules = CompositeArchRule //
+            .of(SpringCacheRules.CacheableMethodsNotCalledFromSameClass)
+            .of(SpringCacheRules.CacheableMethodsAreProxyable)
+            .allowEmptyShould(true);
+
+    /**
+     * Spring Async rules
+     */
+    ArchRule springAsyncRules = CompositeArchRule //
+            .of(SpringAsyncRules.AsyncMethodsNotCalledFromSameClass)
+            .of(SpringAsyncRules.AsyncMethodsAreProxyable)
+            .of(SpringAsyncRules.AsyncMethodsHaveSuitableReturnType)
+            .allowEmptyShould(true);
 
     /**
      * Verifying application module structure
