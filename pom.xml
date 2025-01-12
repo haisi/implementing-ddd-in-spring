@@ -287,7 +287,7 @@
             <scope>test</scope>
         </dependency>
 
-        <!-- Test Spring Modulith -->
+        <!-- Architecture Tests -->
         <dependency>
             <groupId>org.springframework.modulith</groupId>
             <artifactId>spring-modulith-starter-test</artifactId>
@@ -299,6 +299,47 @@
             <version>${jmolecules-integrations.version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>de.rweisleder</groupId>
+            <artifactId>archunit-spring</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <!-- Feature Flags -->
+        <dependency>
+            <groupId>org.togglz</groupId>
+            <artifactId>togglz-testing</artifactId>
+            <version>4.4.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- PACT -->
+        <dependency>
+            <groupId>au.com.dius.pact.consumer</groupId>
+            <artifactId>junit5</artifactId>
+            <version>4.6.16</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>au.com.dius.pact.provider</groupId>
+            <artifactId>junit5</artifactId>
+            <version>4.6.16</version>
+            <scope>test</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>xerces</groupId>
+                    <artifactId>xercesImpl</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+
         <!-- Test Container -->
         <dependency>
             <groupId>org.testcontainers</groupId>
