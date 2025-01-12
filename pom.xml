@@ -123,6 +123,25 @@
             <version>${hypersistence-utils-hibernate-63.version}</version>
         </dependency>
 
+        <!-- Shed Lock -->
+        <dependency>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-spring</artifactId>
+            <version>5.12.0</version>
+        </dependency>
+        <dependency>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-provider-jdbc</artifactId>
+            <version>5.12.0</version>
+        </dependency>
+
+        <!-- Feature flags -->
+        <dependency>
+            <groupId>org.togglz</groupId>
+            <artifactId>togglz-core</artifactId>
+            <version>4.4.0</version>
+        </dependency>
+
         <!--
         jMolecules: Annotations and interfaces to enrich codebase with tactical DDD and architecture concepts.
         Helps bridge the model-code and architecture-code gap.
