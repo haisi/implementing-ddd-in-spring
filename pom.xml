@@ -418,7 +418,7 @@
                     <source>21</source>
                     <target>21</target>
                     <encoding>UTF-8</encoding>
-                    <compilerArgs>
+                    <compilerArgs combine.children="append">
                         <!-- https://docs.oracle.com/en/java/javase/21/docs/specs/man/javac.html -->
                         <!--
                         Enable all warnings
@@ -430,10 +430,69 @@
                         <!-- Terminate compilation when *warnings* occur -->
                         <arg>-Werror</arg>
 
-                        <arg>-Xplugin:ErrorProne -Xep:Var:ERROR -Xep:StringSplitter:OFF
+                        <!--
+                        Error Prone Config: https://errorprone.info/docs/flags
+                        Mainly based on: https://github.com/PicnicSupermarket/error-prone-support/blob/master/pom.xml
+                        -->
+                        <arg>
+                            -Xplugin:ErrorProne -Xep:Var:ERROR -Xep:StringSplitter:OFF
+
+                            <!--
+                            NullAway Configs
+                            https://github.com/uber/NullAway/wiki/Configuration
+                            -->
                             -XepOpt:NullAway:AnnotatedPackages=li.selman.ddd
+                            <!--
+                            Calling .get() on an Optional value that hasn't been previously tested with Optional.isPresent(...)
+                            will result in an error.
+                            https://github.com/uber/NullAway/wiki/Configuration#optional-emptiness-check
+                            -->
+                            -XepOpt:NullAway:CheckOptionalEmptiness=true
+
+                            -XepOpt:IdentifierName:AllowInitialismsInTypeName=true
+                            -XepOpt:InlineMe:SkipInliningsWithComments=false
+
+                            <!-- https://github.com/google/error-prone/issues/2910 -->
+                            -XepOpt:Nullness:Conservative=false
+
+                            <!-- We don't target Android. -->
+                            -Xep:AndroidJdkLibsChecker:OFF
+                            <!-- XXX: Enable this once we open-source
+                            this library. -->
+                            -Xep:BetaApi:OFF
+                            <!-- We don't target JDK 7. -->
+                            -Xep:Java7ApiChecker:OFF
+                            <!-- We don't target JDK 8. -->
+                            -Xep:Java8ApiChecker:OFF
+                            <!-- We don't target Android. -->
+                            -Xep:StaticOrDefaultInterfaceMethod:OFF
+                            <!-- We generally discourage `var` use. -->
+                            -Xep:Varifier:OFF
+                            <!-- Yoda conditions are not always more readable than the alternative. -->
+                            -Xep:YodaCondition:OFF
+                            -XepOpt:CheckReturnValue:CheckAllConstructors=true
+
+                            <!-- Append additional custom arguments. -->
+                            ${error-prone.patch-args}
+                            ${error-prone.self-check-args}
                         </arg>
+                        <!--
+                        The Error Prone plugin makes certain
+                        assumptions about the state of the AST at the
+                        moment it is invoked. Those assumptions require
+                        the `simple` compile policy. This flag may be
+                        dropped after resolution of
+                        https://bugs.openjdk.java.net/browse/JDK-8155674.
+                         -->
                         <arg>-XDcompilePolicy=simple</arg>
+                        <!--
+                        Similarly, Error Prone requires that flow
+                        analysis has been performed, e.g. to determine
+                        whether variables are effectively final. This
+                        flag may be dropped if it ever becomes the
+                        default. See
+                        https://bugs.openjdk.org/browse/JDK-8134117.
+                        -->
                         <arg>--should-stop=ifError=FLOW</arg>
                     </compilerArgs>
                     <annotationProcessorPaths>
@@ -544,7 +603,7 @@
                 </executions>
             </plugin>
             <plugin>
-                <!--                https://github.com/odrotbohm/spring-modulith-deep-dive/blob/681cbca11646c101383fd58a45cd47773a059875/pom.xml#L48 -->
+                <!-- https://github.com/odrotbohm/spring-modulith-deep-dive/blob/681cbca11646c101383fd58a45cd47773a059875/pom.xml#L48 -->
                 <groupId>org.asciidoctor</groupId>
                 <artifactId>asciidoctor-maven-plugin</artifactId>
                 <version>3.0.0</version>
@@ -634,9 +693,10 @@
             </build>
         </profile>
         <profile>
-            <!-- If combined with the `error-prone` profile above, this profile
-            configures Error Prone to try and automatically fix (rather than
-            merely flag) bug pattern violations in the source code. -->
+            <!--
+            If combined with the `error-prone` profile above, this profile configures Error Prone to try and
+            automatically fix (rather than merely flag) bug pattern violations in the source code.
+            -->
             <id>patch</id>
             <activation>
                 <property>
@@ -644,7 +704,87 @@
                 </property>
             </activation>
             <properties>
-                <error-prone.patch-args>-XepPatchChecks:${error-prone.patch-checks} -XepPatchLocation:IN_PLACE</error-prone.patch-args>
+                <error-prone.patch-args>
+                    -XepPatchChecks:${error-prone.patch-checks} -XepPatchLocation:IN_PLACE
+                </error-prone.patch-args>
             </properties>
-        </profile>    </profiles>
+        </profile>
+        <profile>
+            <!-- The `build-checks` and `error-prone` profiles enable numerous
+            additional validations. By default, any violations break the build.
+            This profile allows one to collect all violations without failing
+            the build. -->
+            <id>disallow-warnings</id>
+            <activation>
+                <property>
+                    <name>!verification.warn</name>
+                </property>
+            </activation>
+            <build>
+                <pluginManagement>
+                    <plugins>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-checkstyle-plugin</artifactId>
+                            <configuration>
+                                <failOnViolation>true</failOnViolation>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-compiler-plugin</artifactId>
+                            <configuration>
+                                <compilerArgs combine.children="append">
+                                    <!-- When using a JDK other than the one
+                                    specified using `-source`, `javac` warns
+                                    that the bootstrap classpath will not be
+                                    set. We don't want to fail on that warning. -->
+                                    <arg>-Xlint:-options</arg>
+                                </compilerArgs>
+                                <failOnWarning>true</failOnWarning>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-dependency-plugin</artifactId>
+                            <configuration>
+                                <failBuild>true</failBuild>
+                                <failOnWarning>true</failOnWarning>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.apache.maven.plugins</groupId>
+                            <artifactId>maven-enforcer-plugin</artifactId>
+                            <configuration>
+                                <fail>true</fail>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.codehaus.mojo</groupId>
+                            <artifactId>license-maven-plugin</artifactId>
+                            <configuration>
+                                <failOnBlacklist>true</failOnBlacklist>
+                                <failOnMissing>true</failOnMissing>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.gaul</groupId>
+                            <artifactId>modernizer-maven-plugin</artifactId>
+                            <configuration>
+                                <failOnViolations>true</failOnViolations>
+                            </configuration>
+                        </plugin>
+                        <plugin>
+                            <groupId>org.kordamp.maven</groupId>
+                            <artifactId>pomchecker-maven-plugin</artifactId>
+                            <configuration>
+                                <failOnError>true</failOnError>
+                                <failOnWarning>true</failOnWarning>
+                            </configuration>
+                        </plugin>
+                    </plugins>
+                </pluginManagement>
+            </build>
+        </profile>
+    </profiles>
 </project>
