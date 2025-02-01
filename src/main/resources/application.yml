@@ -33,6 +33,14 @@ management:
         # Enable histogram buckets for Exemplars
         http.server.request: true
 
+ddd:
+  s3:
+    url: "http://127.0.0.1:9000"
+    access-key-id: "minioadmin"
+    secret-access-key: "minioadmin"
+  email:
+    from: "noreply@localhost"
+
 # hmmm, should I really do it like that? No configure by domain. Maybe 'my.statement.httpclient.post....'
 my:
   http:
