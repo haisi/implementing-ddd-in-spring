@@ -8,6 +8,7 @@ import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.CompositeArchRule;
+import com.tngtech.archunit.library.GeneralCodingRules;
 import de.rweisleder.archunit.spring.framework.SpringAsyncRules;
 import de.rweisleder.archunit.spring.framework.SpringCacheRules;
 import org.jmolecules.archunit.JMoleculesArchitectureRules;
@@ -28,21 +29,31 @@ class ArchitectureTests {
     @ArchTest
     ArchRule onionRules = JMoleculesArchitectureRules.ensureOnionSimple();
 
+    @ArchTest
+    ArchRule generalCodingRules = CompositeArchRule //
+            .of(GeneralCodingRules.NO_CLASSES_SHOULD_USE_JAVA_UTIL_LOGGING)
+            .and(GeneralCodingRules.NO_CLASSES_SHOULD_USE_FIELD_INJECTION)
+            .and(GeneralCodingRules.NO_CLASSES_SHOULD_ACCESS_STANDARD_STREAMS)
+            .and(GeneralCodingRules.DEPRECATED_API_SHOULD_NOT_BE_USED)
+            .and(GeneralCodingRules.NO_CLASSES_SHOULD_THROW_GENERIC_EXCEPTIONS)
+            .allowEmptyShould(true);
+
     /**
      * Spring Cacheable rules
      */
-    ArchRule springCacheableRules = CompositeArchRule //
-            .of(SpringCacheRules.CacheableMethodsNotCalledFromSameClass)
-            .of(SpringCacheRules.CacheableMethodsAreProxyable)
+    @ArchTest
+    ArchRule springCacheableRules = CompositeArchRule.of(SpringCacheRules.CacheableMethodsAreProxyable)
+            .and(SpringCacheRules.CacheableMethodsNotCalledFromSameClass)
             .allowEmptyShould(true);
 
     /**
      * Spring Async rules
      */
+    @ArchTest
     ArchRule springAsyncRules = CompositeArchRule //
             .of(SpringAsyncRules.AsyncMethodsNotCalledFromSameClass)
-            .of(SpringAsyncRules.AsyncMethodsAreProxyable)
-            .of(SpringAsyncRules.AsyncMethodsHaveSuitableReturnType)
+            .and(SpringAsyncRules.AsyncMethodsAreProxyable)
+            .and(SpringAsyncRules.AsyncMethodsHaveSuitableReturnType)
             .allowEmptyShould(true);
 
     /**
