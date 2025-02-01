@@ -21,6 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 
 @Import(StatementModelProcessor.class)
@@ -47,7 +48,7 @@ class StatementControllerIntegrationTest extends AbstractWebIntegrationTest {
             Statement statement = StatementFixture.aStatement().build();
             statementRepository.put(statement.getId(), statement);
 
-            mvc.perform(get("/statement/" + statement.getId()))
+            mvc.perform(RestDocumentationRequestBuilders.get("/statement/{statementId}", statement.getId()))
                     .andExpect(status().isOk())
                     .andExpect(content().contentTypeCompatibleWith(MediaTypes.HAL_JSON))
                     .andExpect(jsonPath("$.id", is(statement.getId().toBusinessId())));
@@ -60,7 +61,7 @@ class StatementControllerIntegrationTest extends AbstractWebIntegrationTest {
             assertThat(statementRepository).isEmpty();
 
             // when - any statement is queried
-            mvc.perform(get("/statement/" + StatementFixture.STATEMENT_ID))
+            mvc.perform(RestDocumentationRequestBuilders.get("/statement/", StatementFixture.STATEMENT_ID))
                     // then - 404
                     .andExpect(status().isNotFound())
                     .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_PROBLEM_JSON))
