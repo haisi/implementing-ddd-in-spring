@@ -28,6 +28,7 @@
         <url/>
     </scm>
     <properties>
+        <aws.java.sdk.version>2.30.10</aws.java.sdk.version>
         <bytebuddy.version>1.14.17</bytebuddy.version>
         <error-prone-core.version>2.36.0</error-prone-core.version>
         <!-- Properties using which additional Error Prone flags can be
@@ -59,6 +60,13 @@
                 <groupId>org.springframework.modulith</groupId>
                 <artifactId>spring-modulith-bom</artifactId>
                 <version>${spring-modulith.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>software.amazon.awssdk</groupId>
+                <artifactId>bom</artifactId>
+                <version>${aws.java.sdk.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -295,6 +303,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
             <optional>true</optional>
+        </dependency>
+
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
         </dependency>
 
         <!-- =============================================================================================================== -->
