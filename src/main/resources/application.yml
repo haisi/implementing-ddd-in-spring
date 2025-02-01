@@ -5,6 +5,8 @@ spring:
     problemdetails:
       # RFC 7807 Problem Details support
       enabled: true
+  messages:
+    basename: i18n/messages/messages
 server:
   compression:
     enabled: true
@@ -17,6 +19,8 @@ management:
   info:
     build:
       enabled: true
+    git:
+      mode: full
   endpoints:
     web:
       exposure:

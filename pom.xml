@@ -379,6 +379,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>am.ik.spring</groupId>
+            <artifactId>retryable-client-http-request-interceptor</artifactId>
+            <version>0.7.0</version>
+        </dependency>
+
         <!-- Spring Modulith starters -->
         <dependency>
             <groupId>org.springframework.modulith</groupId>

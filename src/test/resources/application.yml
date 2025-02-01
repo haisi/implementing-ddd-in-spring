@@ -1,3 +1,20 @@
 spring:
   main:
     banner-mode: off
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/impl-ddd
+    username: eric
+    password: evans
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    generate-ddl: true
+
+my:
+  http:
+    client:
+      post:
+        base-url: "https://jsonplaceholder.typicode.com"
+        connection-timeout:
