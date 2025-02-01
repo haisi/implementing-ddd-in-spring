@@ -2,6 +2,7 @@ package li.selman.ddd.common;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 
@@ -42,7 +43,10 @@ public abstract class AbstractWebIntegrationTest {
     void setUp(RestDocumentationContextProvider restDocumentation) {
         mvc = MockMvcBuilders.webAppContextSetup(context)
                 .defaultRequest(get("/").locale(Locale.US))
-                .apply(documentationConfiguration(restDocumentation))
+                .apply(documentationConfiguration(restDocumentation)
+                        .operationPreprocessors()
+                        .withRequestDefaults(prettyPrint())
+                        .withResponseDefaults(prettyPrint()))
                 .alwaysDo(print())
                 .build();
     }
