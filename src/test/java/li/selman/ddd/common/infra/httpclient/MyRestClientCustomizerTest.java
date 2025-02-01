@@ -32,13 +32,19 @@ import static org.springframework.test.web.client.response.MockRestResponseCreat
 @AutoConfigureMockRestServiceServer
 class MyRestClientCustomizerTest {
 
-    private TestClient client;
-
     @Autowired
     private MockRestServiceServer server;
 
+    /**
+     * Either directly use the RestClient with {@code restClientBuilder.build()}
+     */
     @Autowired
     RestClient.Builder restClientBuilder;
+
+    /**
+     * Or use Feign approach
+     */
+    private TestClient client;
 
     @BeforeEach
     void setUp() {
