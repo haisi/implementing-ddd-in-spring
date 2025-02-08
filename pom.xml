@@ -451,33 +451,6 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>com.github.ekryd.sortpom</groupId>
-                    <artifactId>sortpom-maven-plugin</artifactId>
-                    <version>4.0.0</version>
-                    <configuration>
-                        <createBackupFile>false</createBackupFile>
-                        <encoding>${project.build.sourceEncoding}</encoding>
-                        <expandEmptyElements>false</expandEmptyElements>
-                        <nrOfIndentSpace>4</nrOfIndentSpace>
-                        <predefinedSortOrder>recommended_2008_06</predefinedSortOrder>
-                        <sortDependencies>groupId,artifactId</sortDependencies>
-                        <sortDependencyExclusions>groupId,artifactId</sortDependencyExclusions>
-                        <sortModules>true</sortModules>
-                        <sortPlugins>groupId,artifactId</sortPlugins>
-                        <sortProperties>true</sortProperties>
-                        <verifyFail>warn</verifyFail>
-                    </configuration>
-                    <executions>
-                        <execution>
-                            <id>verify-pom-sorting</id>
-                            <goals>
-                                <goal>verify</goal>
-                            </goals>
-                            <phase>verify</phase>
-                        </execution>
-                    </executions>
-                </plugin>
-                <plugin>
                     <!--
                     - Code formatter verifying and applying the palantir-java-format.
                     - Runs as part of the verify phase.
