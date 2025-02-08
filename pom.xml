@@ -486,7 +486,24 @@
                             <palantirJavaFormat>
                                 <style>PALANTIR</style>
                             </palantirJavaFormat>
+                            <removeUnusedImports /> <!-- self-explanatory -->
+                            <formatAnnotations />  <!-- fixes formatting of type annotations, see below -->
                         </java>
+                        <pom>
+                            <sortPom>
+                                <!-- https://github.com/Ekryd/sortpom/wiki/Parameters -->
+                                <nrOfIndentSpace>4</nrOfIndentSpace>
+                                <encoding>${project.build.sourceEncoding}</encoding>
+                                <predefinedSortOrder>recommended_2008_06</predefinedSortOrder>
+                                <sortDependencies>scope,groupId,artifactId</sortDependencies>
+                                <sortDependencyExclusions>groupId,artifactId</sortDependencyExclusions>
+                                <sortModules>true</sortModules>
+                                <sortPlugins>groupId,artifactId</sortPlugins>
+                                <!-- Sorts Maven pom properties alphabetically.
+                                Affects both project/properties and project/profiles/profile/properties. -->
+                                <sortProperties>true</sortProperties>
+                            </sortPom>
+                        </pom>
                     </configuration>
                     <executions>
                         <execution>
