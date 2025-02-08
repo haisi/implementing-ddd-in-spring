@@ -185,6 +185,16 @@
             <artifactId>micrometer-observation-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-test</artifactId> <!-- For unit tests -->
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-tracing-integration-test</artifactId> <!-- For integration tests -->
+            <scope>test</scope>
+        </dependency>
 
         <!-- Metrics -->
         <!-- Without this dependency actuator does not provide a /actuator/prometheus endpoint. -->
@@ -197,6 +207,7 @@
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-tracing-bridge-otel</artifactId>
         </dependency>
+        <!-- Add testing libs https://docs.micrometer.io/tracing/reference/testing.html -->
         <!-- To report traces to Zipkin -->
         <dependency>
             <groupId>io.zipkin.reporter2</groupId>
