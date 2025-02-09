@@ -44,6 +44,7 @@
         <!-- https://spring.io/projects/spring-cloud -->
         <spring-cloud.version>2024.0.0</spring-cloud.version>
         <spring-modulith.version>1.3.1</spring-modulith.version>
+        <springdoc-openapi.version>2.8.4</springdoc-openapi.version>
         <zipkin-reporter-brave.version>3.4.0</zipkin-reporter-brave.version>
     </properties>
 
@@ -394,6 +395,17 @@
             <groupId>am.ik.spring</groupId>
             <artifactId>retryable-client-http-request-interceptor</artifactId>
             <version>0.7.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>${springdoc-openapi.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
+            <version>${springdoc-openapi.version}</version>
         </dependency>
 
         <!-- Spring Modulith starters -->
