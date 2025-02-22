@@ -11,8 +11,12 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 class SpringdocConfiguration {
-    @Value("${application.version:undefined}")
-    private String version;
+
+    private final String version;
+
+    SpringdocConfiguration(@Value("${application.version:undefined}") String version) {
+        this.version = version;
+    }
 
     @Bean
     public OpenAPI litesampleOpenAPI() {
