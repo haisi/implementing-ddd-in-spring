@@ -11,6 +11,7 @@ import com.palantir.javapoet.TypeSpec;
 import org.springframework.lang.NonNullApi;
 import org.springframework.lang.NonNullFields;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,10 +21,8 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class PackageInfoGenerator {
-    // The annotations we want to ensure are present (simple names)
     private static final Set<String> REQUIRED_ANNOTATIONS = Set.of("NonNullApi", "NonNullFields");
 
-    // Full qualified names for adding imports
     private static final Set<String> ANNOTATION_IMPORTS =
             Set.of("org.springframework.lang.NonNullApi", "org.springframework.lang.NonNullFields");
 
@@ -36,7 +35,7 @@ public class PackageInfoGenerator {
             if (Files.exists(packageInfoPath)) {
                 updateExistingPackageInfo(packageInfoPath, packageName);
             } else {
-                generateNewPackageInfo(packageName, rootDir);
+                generateNewPackageInfo(packageInfoPath, packageName);
             }
         }
     }
@@ -86,18 +85,21 @@ public class PackageInfoGenerator {
         }
     }
 
-    private static void generateNewPackageInfo(String packageName, String rootDir) throws IOException {
-        // For new files, we'll use JavaPoet as it handles formatting nicely
-        TypeSpec packageInfo = TypeSpec.annotationBuilder("package-info")
-                .addAnnotation(NonNullApi.class)
-                .addAnnotation(NonNullFields.class)
-                .build();
+    private static void generateNewPackageInfo(Path packageInfoPath, String packageName) throws IOException {
+        // Create new package-info.java content directly
+        StringBuilder content = new StringBuilder();
 
-        JavaFile javaFile = JavaFile.builder(packageName, packageInfo)
-                .addFileComment("Generated package info file with non-null annotations")
-                .build();
+        // Add annotations and package declaration
+        content.append("@NonNullApi\n");
+        content.append("@NonNullFields\n");
+        content.append("package ").append(packageName).append(";\n\n");
 
-        javaFile.writeTo(Paths.get(rootDir));
+        // Add imports
+        content.append("import org.springframework.lang.NonNullApi;\n");
+        content.append("import org.springframework.lang.NonNullFields;\n\n");
+
+        // Write the file
+        Files.writeString(packageInfoPath, content.toString());
         System.out.println("Generated new package-info.java for " + packageName);
     }
 
@@ -111,7 +113,9 @@ public class PackageInfoGenerator {
                         return false;
                     }
                 })
-                .map(path -> rootDir.relativize(path).toString().replace(System.getProperty("file.separator"), "."))
+                .map(path -> rootDir.relativize(path)
+                        .toString()
+                        .replace(FileSystems.getDefault().getSeparator(), "."))
                 .collect(Collectors.toList());
     }
 
