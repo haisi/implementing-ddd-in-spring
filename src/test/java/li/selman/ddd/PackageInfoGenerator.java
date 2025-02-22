@@ -6,7 +6,8 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
 import com.github.javaparser.ast.expr.Name;
-
+import org.springframework.lang.NonNullApi;
+import org.springframework.lang.NonNullFields;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -22,21 +23,21 @@ public class PackageInfoGenerator {
     private static final Set<String> ANNOTATION_IMPORTS =
             Set.of("org.springframework.lang.NonNullApi", "org.springframework.lang.NonNullFields");
 
-    public static void updatePackageInfoFiles(String rootDir) throws IOException {
-        List<String> packages = findPackages(Paths.get(rootDir));
+    public static void updatePackageInfoFiles(String rootDir, String basePackage) throws IOException {
+        List<String> packages = findPackages(Paths.get(rootDir), basePackage);
 
         for (String packageName : packages) {
             Path packageInfoPath = Paths.get(rootDir, packageName.replace('.', '/'), "package-info.java");
 
             if (Files.exists(packageInfoPath)) {
-                updateExistingPackageInfo(packageInfoPath, packageName);
+                updateExistingPackageInfo(packageInfoPath);
             } else {
                 generateNewPackageInfo(packageInfoPath, packageName);
             }
         }
     }
 
-    private static void updateExistingPackageInfo(Path packageInfoPath, String packageName) throws IOException {
+    private static void updateExistingPackageInfo(Path packageInfoPath) throws IOException {
         JavaParser parser = new JavaParser();
         String content = Files.readString(packageInfoPath);
         Optional<CompilationUnit> result = parser.parse(content).getResult();
@@ -99,48 +100,23 @@ public class PackageInfoGenerator {
         System.out.println("Generated new package-info.java for " + packageName);
     }
 
-    private static List<String> findPackages(Path rootDir) throws IOException {
-        Set<String> packages = new HashSet<>();
+    private static List<String> findPackages(Path rootDir, String excludePackage) throws IOException {
+        String excludePath = excludePackage.replace('.', '/');
+        Path realRoot = Paths.get(rootDir.toString(), excludePath);
 
-        // First, find all Java files
-        try (Stream<Path> pathStream = Files.walk(rootDir)) {
-            List<Path> javaFiles = pathStream
-                    .filter(path -> path.toString().endsWith(".java"))
-                    .filter(path -> !path.getFileName().toString().equals("package-info.java"))
-                    .toList();
-
-            // For each Java file, add its package to the set
-            for (Path javaFile : javaFiles) {
-                Path relativePath = rootDir.relativize(javaFile.getParent());
-                String packageName = relativePath.toString().replace(FileSystems.getDefault().getSeparator(), ".");
-
-                // Add the package and all its parent packages
-                StringBuilder packageBuilder = new StringBuilder();
-                for (String component : packageName.split("\\.")) {
-                    if (!packageBuilder.isEmpty()) {
-                        packageBuilder.append(".");
-                    }
-                    packageBuilder.append(component);
-                    packages.add(packageBuilder.toString());
-                }
-            }
-        }
-        // Sort packages for consistent ordering
-        return new ArrayList<>(packages).stream()
-                .filter(pkg -> !pkg.isEmpty())  // Filter out empty package names
-                .sorted()
-                .collect(Collectors.toList());
-    }
-
-    private static boolean containsJavaFiles(Path directory) {
-        try (Stream<Path> dirStream = Files.list(directory)) {
-            return dirStream.anyMatch(file -> file.toString().endsWith(".java"));
-        } catch (IOException e) {
-            return false;
+        try (Stream<Path> pathStream = Files.walk(realRoot)) {
+            return pathStream
+                    .filter(Files::isDirectory)
+                    .map(path -> realRoot.relativize(path).toString())
+                    .filter(path -> !path.isEmpty()) // exclude root directory
+                    .map(path -> path.replace('/', '.'))
+                    .map(path -> excludePackage + "." + path)
+                    .sorted()
+                    .collect(Collectors.toList());
         }
     }
 
     public static void main(String[] args) throws IOException {
-        updatePackageInfoFiles("src/main/java", "li/selman/ddd");
+        updatePackageInfoFiles("src/main/java", "li.selman");
     }
 }
