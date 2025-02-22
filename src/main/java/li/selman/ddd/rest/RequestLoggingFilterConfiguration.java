@@ -8,7 +8,7 @@ import org.springframework.web.filter.AbstractRequestLoggingFilter;
 import org.springframework.web.filter.CommonsRequestLoggingFilter;
 
 @Configuration
-class RequestLoggingFilterConfig {
+class RequestLoggingFilterConfiguration {
     @Bean
     public AbstractRequestLoggingFilter logFilter() {
         var filter = new MyCommonsRequestLoggingFilter();

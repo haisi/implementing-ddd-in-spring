@@ -13,9 +13,9 @@ import org.springframework.web.client.support.RestClientAdapter;
 import org.springframework.web.service.invoker.HttpServiceProxyFactory;
 
 @Configuration
-class PostClientConfig {
+class PostClientConfiguration {
 
-    private static final Logger log = LoggerFactory.getLogger(PostClientConfig.class);
+    private static final Logger log = LoggerFactory.getLogger(PostClientConfiguration.class);
 
     @Bean
     PostClient postClient(

@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
 
 @Configuration
-public class ApplicationErrorsConfig {
+public class ApplicationErrorsConfiguration {
 
     @Bean("applicationErrorMessageSource")
     MessageSource applictionErrorMessageSource() {

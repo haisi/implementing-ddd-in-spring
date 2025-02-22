@@ -9,12 +9,12 @@ import org.springframework.format.datetime.standard.DateTimeFormatterRegistrar;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-class WebConfig implements WebMvcConfigurer {
+class WebConfiguration implements WebMvcConfigurer {
 
     private final List<Printer<?>> printers;
     private final List<GenericConverter> converters;
 
-    WebConfig(List<Printer<?>> printers, List<GenericConverter> converters) {
+    WebConfiguration(List<Printer<?>> printers, List<GenericConverter> converters) {
         this.printers = printers;
         this.converters = converters;
     }

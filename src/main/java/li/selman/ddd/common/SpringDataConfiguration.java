@@ -9,4 +9,4 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "li.selman.ddd")
 @EntityScan("li.selman.ddd")
-public class SpringDataConfig {}
+public class SpringDataConfiguration {}
