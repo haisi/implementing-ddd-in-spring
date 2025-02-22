@@ -20,12 +20,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 
+import static li.selman.ddd.common.Constants.DEFAULT_LOCALE;
 import static li.selman.ddd.common.Constants.SUPPORTED_LOCALES;
-import static li.selman.ddd.common.error.ApplicationErrorHandler.MESSAGE_PREFIX;
+import static li.selman.ddd.common.error.ApplicationErrorHandler.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.SoftAssertions.assertSoftly;
 
-// TODO check that there is a translation for each element in here
 class StandardErrorKeyTest {
 
     static ReloadableResourceBundleMessageSource source = new ReloadableResourceBundleMessageSource();
@@ -37,20 +37,20 @@ class StandardErrorKeyTest {
     }
 
     @ParameterizedTest
-    @MethodSource("enumCombinations")
-    void test(StandardErrorKey key, Locale locale) {
+    @MethodSource("errorKeyLocaleCombination")
+    void allErrorKeysHaveTranslationsForTitleAndDetail(StandardErrorKey key, Locale locale) {
         assertSoftly(softAssertions -> {
             softAssertions
-                    .assertThat(source.getMessage(MESSAGE_PREFIX + key.get() + "." + "title", null, locale))
+                    .assertThat(source.getMessage(getMessageCode(key, TITLE_SUFFIX), null, locale))
                     .isNotBlank();
             softAssertions
-                    .assertThat(source.getMessage(MESSAGE_PREFIX + key.get() + "." + "detail", null, locale))
+                    .assertThat(source.getMessage(getMessageCode(key, DETAIL_SUFFIX), null, locale))
                     .isNotBlank();
         });
     }
 
     @Test
-    void ensureTranslationFilesExistForAllSupportedLocales() throws IOException, URISyntaxException {
+    void ensureTranslationFilesExistForAllSupportedLocales() throws URISyntaxException {
         String i18nPath = "i18n/errors";
         String fileNamePattern = "application-errors-messages%s.properties";
 
@@ -62,7 +62,7 @@ class StandardErrorKeyTest {
 
         // For each supported locale
         for (Locale locale : SUPPORTED_LOCALES) {
-            String suffix = Locale.ENGLISH.equals(locale) ? "" : "_" + locale.getLanguage();
+            String suffix = DEFAULT_LOCALE.equals(locale) ? "" : "_" + locale.getLanguage();
             String expectedFileName = String.format(fileNamePattern, suffix);
             Path expectedFile = resourcePath.resolve(expectedFileName);
 
@@ -106,7 +106,7 @@ class StandardErrorKeyTest {
         }
     }
 
-    static Stream<Arguments> enumCombinations() {
+    static Stream<Arguments> errorKeyLocaleCombination() {
         List<Arguments> combinations = new ArrayList<>();
 
         for (var first : StandardErrorKey.values()) {

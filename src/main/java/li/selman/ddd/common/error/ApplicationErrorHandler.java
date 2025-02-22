@@ -4,15 +4,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.i18n.LocaleContextHolder;
-import org.springframework.context.support.ReloadableResourceBundleMessageSource;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ProblemDetail;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import java.util.Locale;
@@ -24,7 +19,9 @@ public class ApplicationErrorHandler {
 
     private static final Logger log = LoggerFactory.getLogger(ApplicationErrorHandler.class);
 
-    private static final String MESSAGE_PREFIX = "error.";
+    static final String MESSAGE_PREFIX = "error.";
+    static final String TITLE_SUFFIX = "title";
+    static final String DETAIL_SUFFIX = "detail";
 
     private final MessageSource messages;
 
@@ -48,7 +45,7 @@ public class ApplicationErrorHandler {
         HttpStatusCode status = Optional.ofNullable(exception.getStatusCode()).orElse(HttpStatus.INTERNAL_SERVER_ERROR);
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(status, buildDetail(exception));
 
-        problem.setTitle(getMessage(exception.getKey(), "title"));
+        problem.setTitle(getMessage(exception.getKey(), TITLE_SUFFIX));
         problem.setProperty("key", exception.getKey().get());
 
         logException(exception, status);
@@ -57,12 +54,16 @@ public class ApplicationErrorHandler {
     }
 
     private String buildDetail(MyException exception) {
-        String messageTemplate = getMessage(exception.getKey(), "detail");
+        String messageTemplate = getMessage(exception.getKey(), DETAIL_SUFFIX);
         return ArgumentsReplacer.replaceParameters(messageTemplate, exception.getParameters());
     }
 
     private String getMessage(ErrorKey key, String suffix) {
-        return messages.getMessage(MESSAGE_PREFIX + key.get() + "." + suffix, null, locale());
+        return messages.getMessage(getMessageCode(key, suffix), null, locale());
+    }
+
+    static String getMessageCode(ErrorKey key, String suffix) {
+        return MESSAGE_PREFIX + key.get() + "." + suffix;
     }
 
     private Locale locale() {
