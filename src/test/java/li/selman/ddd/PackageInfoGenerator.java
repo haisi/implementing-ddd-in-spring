@@ -6,10 +6,7 @@ import com.github.javaparser.ast.NodeList;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.MarkerAnnotationExpr;
 import com.github.javaparser.ast.expr.Name;
-import com.palantir.javapoet.JavaFile;
-import com.palantir.javapoet.TypeSpec;
-import org.springframework.lang.NonNullApi;
-import org.springframework.lang.NonNullFields;
+
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -19,6 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PackageInfoGenerator {
     private static final Set<String> REQUIRED_ANNOTATIONS = Set.of("NonNullApi", "NonNullFields");
@@ -104,19 +102,22 @@ public class PackageInfoGenerator {
     }
 
     private static List<String> findPackages(Path rootDir) throws IOException {
-        return Files.walk(rootDir)
-                .filter(Files::isDirectory)
-                .filter(path -> {
-                    try {
-                        return Files.list(path).anyMatch(file -> file.toString().endsWith(".java"));
-                    } catch (IOException e) {
-                        return false;
-                    }
-                })
-                .map(path -> rootDir.relativize(path)
-                        .toString()
-                        .replace(FileSystems.getDefault().getSeparator(), "."))
-                .collect(Collectors.toList());
+        try (Stream<Path> pathStream = Files.walk(rootDir)) {
+            return pathStream
+                    .filter(Files::isDirectory)
+                    .filter(PackageInfoGenerator::containsJavaFiles)
+                    .map(path -> rootDir.relativize(path).toString()
+                            .replace(FileSystems.getDefault().getSeparator(), "."))
+                    .collect(Collectors.toList());
+        }
+    }
+
+    private static boolean containsJavaFiles(Path directory) {
+        try (Stream<Path> dirStream = Files.list(directory)) {
+            return dirStream.anyMatch(file -> file.toString().endsWith(".java"));
+        } catch (IOException e) {
+            return false;
+        }
     }
 
     public static void main(String[] args) throws IOException {
