@@ -20,8 +20,11 @@ import org.jmolecules.archunit.JMoleculesDddRules;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.lang.NonNullApi;
+import org.springframework.lang.NonNullFields;
 import org.springframework.modulith.core.ApplicationModules;
 import org.springframework.modulith.docs.Documenter;
+
+import java.util.stream.Stream;
 
 @AnalyzeClasses(packagesOf = ImplementingDddApplication.class, importOptions = ImportOption.DoNotIncludeTests.class)
 class ArchitectureTests {
@@ -90,13 +93,19 @@ class ArchitectureTests {
         modules.verify();
     }
 
-    /** Enforce that all packages contain a `package-info.java` annotated with `@NonNullApi` */
+    /** Enforce that all packages contain a `package-info.java` annotated with `@NonNullApi` and `@NonNullFields.
+     * Run {@link PackageInfoGenerator} to fix */
     @ArchTest
     void packagesShouldBeAnnotated(JavaClasses classes) {
         var rootPackage = classes.getPackage(ROOT_PACKAGE);
-        var violations = rootPackage.getSubpackagesInTree().stream()
-                .filter(pkg -> !pkg.isAnnotatedWith(NonNullApi.class))
-                .map(pkg -> pkg.getDescription() + " is not annotated with @" + NonNullApi.class.getSimpleName());
-        assertThat(violations).as("violations").isEmpty();
+        Stream<String> violations = rootPackage.getSubpackagesInTree().stream()
+                .filter(pkg -> !pkg.isAnnotatedWith(NonNullApi.class) || !pkg.isAnnotatedWith(NonNullFields.class))
+                .map(pkg -> pkg.getDescription() + " is not annotated with @" + NonNullApi.class.getSimpleName()
+                        + " and @" + NonNullFields.class.getSimpleName());
+
+        assertThat(violations)
+                .as("Not all packages contain a package-info.java file with the required nullability annotations. "
+                        + "Run PackageInfoGenerator to fix.")
+                .isEmpty();
     }
 }
