@@ -12,9 +12,7 @@ import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -102,14 +100,36 @@ public class PackageInfoGenerator {
     }
 
     private static List<String> findPackages(Path rootDir) throws IOException {
+        Set<String> packages = new HashSet<>();
+
+        // First, find all Java files
         try (Stream<Path> pathStream = Files.walk(rootDir)) {
-            return pathStream
-                    .filter(Files::isDirectory)
-                    .filter(PackageInfoGenerator::containsJavaFiles)
-                    .map(path -> rootDir.relativize(path).toString()
-                            .replace(FileSystems.getDefault().getSeparator(), "."))
-                    .collect(Collectors.toList());
+            List<Path> javaFiles = pathStream
+                    .filter(path -> path.toString().endsWith(".java"))
+                    .filter(path -> !path.getFileName().toString().equals("package-info.java"))
+                    .toList();
+
+            // For each Java file, add its package to the set
+            for (Path javaFile : javaFiles) {
+                Path relativePath = rootDir.relativize(javaFile.getParent());
+                String packageName = relativePath.toString().replace(FileSystems.getDefault().getSeparator(), ".");
+
+                // Add the package and all its parent packages
+                StringBuilder packageBuilder = new StringBuilder();
+                for (String component : packageName.split("\\.")) {
+                    if (!packageBuilder.isEmpty()) {
+                        packageBuilder.append(".");
+                    }
+                    packageBuilder.append(component);
+                    packages.add(packageBuilder.toString());
+                }
+            }
         }
+        // Sort packages for consistent ordering
+        return new ArrayList<>(packages).stream()
+                .filter(pkg -> !pkg.isEmpty())  // Filter out empty package names
+                .sorted()
+                .collect(Collectors.toList());
     }
 
     private static boolean containsJavaFiles(Path directory) {
@@ -121,6 +141,6 @@ public class PackageInfoGenerator {
     }
 
     public static void main(String[] args) throws IOException {
-        updatePackageInfoFiles("src/main/java");
+        updatePackageInfoFiles("src/main/java", "li/selman/ddd");
     }
 }
