@@ -1,6 +1,15 @@
 spring:
   application:
     name: implementing-ddd
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: validate
+  flyway:
+    enabled: true
+    locations: classpath:/db/migration
   mvc:
     problemdetails:
       # RFC 7807 Problem Details support
