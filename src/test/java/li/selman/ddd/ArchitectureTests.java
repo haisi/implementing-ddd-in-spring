@@ -1,19 +1,24 @@
 package li.selman.ddd;
 
+import static de.rweisleder.archunit.spring.SpringAnnotationPredicates.springAnnotatedWith;
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.tngtech.archunit.base.DescribedPredicate;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ImportOption;
 import com.tngtech.archunit.junit.AnalyzeClasses;
 import com.tngtech.archunit.junit.ArchTest;
 import com.tngtech.archunit.lang.ArchRule;
 import com.tngtech.archunit.lang.CompositeArchRule;
+import com.tngtech.archunit.lang.syntax.ArchRuleDefinition;
 import com.tngtech.archunit.library.GeneralCodingRules;
 import de.rweisleder.archunit.spring.framework.SpringAsyncRules;
 import de.rweisleder.archunit.spring.framework.SpringCacheRules;
+import de.rweisleder.archunit.spring.framework.SpringComponentPredicates;
 import org.jmolecules.archunit.JMoleculesArchitectureRules;
 import org.jmolecules.archunit.JMoleculesDddRules;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.lang.NonNullApi;
 import org.springframework.modulith.core.ApplicationModules;
 import org.springframework.modulith.docs.Documenter;
@@ -55,6 +60,14 @@ class ArchitectureTests {
             .and(SpringAsyncRules.AsyncMethodsAreProxyable)
             .and(SpringAsyncRules.AsyncMethodsHaveSuitableReturnType)
             .allowEmptyShould(true);
+
+    @ArchTest
+    ArchRule springConfigurationNaming = ArchRuleDefinition.classes()
+            .that(SpringComponentPredicates.springConfiguration())
+            .and(DescribedPredicate.not(springAnnotatedWith(SpringBootApplication.class)))
+            .should()
+            .haveSimpleNameEndingWith("Configuration")
+            .as("Custom spring configuration class names must end with Configuration");
 
     /**
      * Verifying application module structure
