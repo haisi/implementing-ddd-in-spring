@@ -1,18 +1,35 @@
 package li.selman.ddd.common.error;
 
 public enum StandardErrorKey implements ErrorKey {
+    BAD_REQUEST(1, "bad-request"),
+    ILLEGAL_ARGUMENT(2, "internal-server-error"),
+    INTERNAL_SERVER_ERROR(3, "internal-server-error"),
+    NULL_POINTER(3, "internal-server-error"),
+    ;
 
-    BAD_REQUEST("bad-request"),
-    INTERNAL_SERVER_ERROR("internal-server-error");
+    /**
+     * We do not want to expose error codes from which user my infer too much information.
+     */
+    private final Integer publicErrorCode;
 
-    private final String key;
+    /**
+     * The translations key which gets resolved to i18n text.
+     * For multiple error codes we can re-use the same translation key.
+     */
+    private final String translationKey;
 
-    StandardErrorKey(String key) {
-        this.key = key;
+    StandardErrorKey(Integer publicErrorCode, String translationKey) {
+        this.publicErrorCode = publicErrorCode;
+        this.translationKey = translationKey;
     }
 
     @Override
-    public String get() {
-        return key;
+    public String getTranslationKey() {
+        return translationKey;
+    }
+
+    @Override
+    public Integer getPublicErrorCode() {
+        return publicErrorCode;
     }
 }
