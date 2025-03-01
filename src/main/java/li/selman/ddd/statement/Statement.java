@@ -1,15 +1,6 @@
 package li.selman.ddd.statement;
 
-import static li.selman.ddd.statement.Statement.State.*;
-import static org.slf4j.LoggerFactory.getLogger;
-
 import jakarta.persistence.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
 import li.selman.ddd.fsm.Transition;
 import li.selman.ddd.fsm.Transitionable;
 import li.selman.ddd.statement.Reaction.ReactionId;
@@ -21,6 +12,16 @@ import org.jmolecules.event.types.DomainEvent;
 import org.jmolecules.jpa.JMoleculesJpa;
 import org.slf4j.Logger;
 import org.springframework.data.domain.AbstractAggregateRoot;
+
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+
+import static li.selman.ddd.statement.Statement.State.*;
+import static org.slf4j.LoggerFactory.getLogger;
 
 @SuppressWarnings("NullAway.Init")
 @Entity
@@ -63,6 +64,7 @@ public class Statement extends AbstractAggregateRoot<Statement>
 
     Statement(StatementId id) {
         this.id = Objects.requireNonNull(id);
+        this.state = OPEN;
         this.registerEvent(new StatementCreated(id));
     }
 
@@ -101,6 +103,10 @@ public class Statement extends AbstractAggregateRoot<Statement>
     @Override
     public StatementId getId() {
         return id;
+    }
+
+    public State getState() {
+        return state;
     }
 
     public List<Reaction> getReactions() {
