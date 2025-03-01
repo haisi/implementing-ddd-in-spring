@@ -1,8 +1,5 @@
 package li.selman.ddd.statement.infrastructure.persistence;
 
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Optional;
 import li.selman.ddd.common.StaleStateException;
 import li.selman.ddd.statement.Statement;
 import li.selman.ddd.statement.StatementRepository;
@@ -10,6 +7,10 @@ import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Optional;
 
 @Component
 class JpaStatementRepository implements StatementRepository {
@@ -27,7 +28,10 @@ class JpaStatementRepository implements StatementRepository {
 
     @Override
     public List<String> findByState(Statement.State state) {
-        return List.of();
+        return springDataRepo.findAll().stream()
+                .filter(statement -> statement.getState().equals(state))
+                .map(Statement::toString)
+                .toList();
     }
 
     @Override
