@@ -21,7 +21,7 @@ public class MyException extends RuntimeException {
 
     private final Map<String, String> parameters;
 
-    MyException(
+    public MyException(
             String message,
             ErrorKey key,
             Temporality temporality,
@@ -34,7 +34,7 @@ public class MyException extends RuntimeException {
         this.parameters = parameters;
     }
 
-    MyException(
+    public MyException(
             String message,
             Throwable cause,
             ErrorKey key,

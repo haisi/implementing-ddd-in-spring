@@ -4,7 +4,8 @@ public enum StandardErrorKey implements ErrorKey {
     BAD_REQUEST(1, "bad-request"),
     ILLEGAL_ARGUMENT(2, "internal-server-error"),
     INTERNAL_SERVER_ERROR(3, "internal-server-error"),
-    NULL_POINTER(3, "internal-server-error"),
+    NULL_POINTER(4, "internal-server-error"),
+    PROCESS_CONFLICT(4, "stale-state"),
     ;
 
     /**
