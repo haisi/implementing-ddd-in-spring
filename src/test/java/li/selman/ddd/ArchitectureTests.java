@@ -1,8 +1,5 @@
 package li.selman.ddd;
 
-import static de.rweisleder.archunit.spring.SpringAnnotationPredicates.springAnnotatedWith;
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.tngtech.archunit.base.DescribedPredicate;
 import com.tngtech.archunit.core.domain.JavaClasses;
 import com.tngtech.archunit.core.importer.ImportOption;
@@ -15,6 +12,7 @@ import com.tngtech.archunit.library.GeneralCodingRules;
 import de.rweisleder.archunit.spring.framework.SpringAsyncRules;
 import de.rweisleder.archunit.spring.framework.SpringCacheRules;
 import de.rweisleder.archunit.spring.framework.SpringComponentPredicates;
+import li.selman.ddd.common.error.MyException;
 import org.jmolecules.archunit.JMoleculesArchitectureRules;
 import org.jmolecules.archunit.JMoleculesDddRules;
 import org.junit.jupiter.api.Test;
@@ -25,6 +23,9 @@ import org.springframework.modulith.core.ApplicationModules;
 import org.springframework.modulith.docs.Documenter;
 
 import java.util.stream.Stream;
+
+import static de.rweisleder.archunit.spring.SpringAnnotationPredicates.springAnnotatedWith;
+import static org.assertj.core.api.Assertions.assertThat;
 
 @AnalyzeClasses(packagesOf = ImplementingDddApplication.class, importOptions = ImportOption.DoNotIncludeTests.class)
 class ArchitectureTests {
@@ -92,6 +93,13 @@ class ArchitectureTests {
 
         modules.verify();
     }
+
+    @ArchTest
+    ArchRule allExceptionsShouldInheritFromMyException = ArchRuleDefinition.classes()
+            .that()
+            .areAssignableTo(Throwable.class)
+            .should()
+            .beAssignableTo(MyException.class);
 
     /** Enforce that all packages contain a `package-info.java` annotated with `@NonNullApi` and `@NonNullFields.
      * Run {@link PackageInfoGenerator} to fix */
