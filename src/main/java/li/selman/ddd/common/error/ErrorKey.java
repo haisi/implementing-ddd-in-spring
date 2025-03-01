@@ -2,6 +2,7 @@ package li.selman.ddd.common.error;
 
 public interface ErrorKey {
 
+    Integer getPublicErrorCode();
     /**
      * An ErrorKey represents two entries in resource
      * {@code /messages/errors/application-errors-messages.properties}
@@ -18,5 +19,5 @@ public interface ErrorKey {
      *
      * @return key
      */
-    String get();
+    String getTranslationKey();
 }
