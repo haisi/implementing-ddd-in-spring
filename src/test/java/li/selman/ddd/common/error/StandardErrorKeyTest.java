@@ -13,11 +13,10 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static li.selman.ddd.common.Constants.DEFAULT_LOCALE;
@@ -34,6 +33,14 @@ class StandardErrorKeyTest {
     static void init() {
         source.setBasename("classpath:/i18n/errors/application-errors-messages");
         source.setDefaultEncoding("UTF-8");
+    }
+
+    @Test
+    void eachErrorKeyIsUnique() {
+        Set<Integer> uniqueErrorsKeys = Arrays.stream(StandardErrorKey.values())
+                .map(StandardErrorKey::getPublicErrorCode)
+                .collect(Collectors.toSet());
+        assertThat(StandardErrorKey.values()).hasSize(uniqueErrorsKeys.size());
     }
 
     @ParameterizedTest
