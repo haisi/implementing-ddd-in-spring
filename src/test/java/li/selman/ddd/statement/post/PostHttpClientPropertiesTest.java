@@ -27,20 +27,22 @@ class PostHttpClientPropertiesTest extends AbstractPropertyTest {
                               post:
                                 base-url: "https://jsonplaceholder.typicode.com"
                                 connection-timeout: 1s
-                        """, MyHttpClientProperties.class);
+                        """,
+                MyHttpClientProperties.class);
 
         assertThat(validator.validate(properties)).isEmpty();
     }
 
     @EnableConfigurationProperties(MyHttpClientProperties.class)
-    static class TestConfiguration {
-    }
+    static class TestConfiguration {}
 
     /**
      * Test using YAML
      */
     @Nested
-    @SpringBootTest(classes = {TestConfiguration.class}, webEnvironment = SpringBootTest.WebEnvironment.NONE)
+    @SpringBootTest(
+            classes = {TestConfiguration.class},
+            webEnvironment = SpringBootTest.WebEnvironment.NONE)
     @ActiveProfiles("properties-ittest")
     class ITTest {
 
@@ -64,8 +66,7 @@ class PostHttpClientPropertiesTest extends AbstractPropertyTest {
                 .withPropertyValues(
                         "my.clients.post.base-url=https://api.service-a.com",
                         "my.clients.post.http-read-timeout=5s",
-                        "my.clients.post.http-write-timeout=3s"
-                );
+                        "my.clients.post.http-write-timeout=3s");
 
         @Test
         void shouldBindConfigurationProperties() {

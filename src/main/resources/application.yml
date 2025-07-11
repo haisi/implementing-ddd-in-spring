@@ -16,6 +16,8 @@ spring:
       enabled: true
   messages:
     basename: i18n/messages/messages
+  web:
+    locale: en_EN
 server:
   compression:
     enabled: true
@@ -55,9 +57,9 @@ ddd:
     from: "noreply@localhost"
 
 # hmmm, should I really do it like that? No configure by domain. Maybe 'my.statement.httpclient.post....'
-my:
-  http:
-    client:
-      post:
-        base-url: "https://jsonplaceholder.typicode.com"
-        connection-timeout:
+#my:
+#  http:
+#    client:
+#      post:
+#        base-url: "https://jsonplaceholder.typicode.com"
+#        connection-timeout:

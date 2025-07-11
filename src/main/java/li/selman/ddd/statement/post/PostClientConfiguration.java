@@ -20,19 +20,19 @@ class PostClientConfiguration {
     @Bean
     PostClient postClient(
             RestClient.Builder restClientBuilder,
-            PostHttpClientProperties postHttpClientProperties,
+//            PostHttpClientProperties postHttpClientProperties,
             ClientLoggerRequestInterceptor clientLoggerRequestInterceptor) {
         // Docs:
         // https://docs.spring.io/spring-boot/reference/io/rest-client.html#io.rest-client.restclient
         var requestFactory = new HttpComponentsClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(postHttpClientProperties.getConnectTimeout());
-        requestFactory.setConnectionRequestTimeout(postHttpClientProperties.getRequestTimeout());
+//        requestFactory.setConnectTimeout(postHttpClientProperties.getConnectTimeout());
+//        requestFactory.setConnectionRequestTimeout(postHttpClientProperties.getRequestTimeout());
 
         restClientBuilder.requestInterceptors(clientHttpRequestInterceptors -> log.info(""));
 
 
         RestClient restClient = restClientBuilder
-                .baseUrl(postHttpClientProperties.getBaseUrl().toString())
+//                .baseUrl(postHttpClientProperties.getBaseUrl().toString())
                 .requestInterceptor(clientLoggerRequestInterceptor)
                 .requestInterceptor(new RetryableClientHttpRequestInterceptor(new FixedBackOff(100, 2)))
                 .requestFactory(requestFactory)
