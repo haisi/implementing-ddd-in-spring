@@ -1,34 +1,21 @@
 package li.selman.ddd.common;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.bind.ConstructorBinding;
 import org.springframework.boot.context.properties.bind.DefaultValue;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.Duration;
-import java.util.HashMap;
 import java.util.Map;
 
-//@Configuration
+@Validated
 @ConfigurationProperties("my")
 public class MyHttpClientProperties {
 
-    String kool;
+    private final Map<String, HttpClientConfig> clients;
 
-    public String getKool() {
-        return kool;
-    }
-
-    public MyHttpClientProperties setKool(String kool) {
-        this.kool = kool;
-        return this;
-    }
-
-    Map<String, HttpClientConfig> clients = new HashMap<>();
-
-    public Map<String, HttpClientConfig> getClients() {
-        return clients;
-    }
-
-    public void setClients(Map<String, HttpClientConfig> clients) {
+    @ConstructorBinding
+    public MyHttpClientProperties(Map<String, HttpClientConfig> clients) {
         this.clients = clients;
     }
 
